@@ -6,6 +6,7 @@ import com.yuejiangw.usercenterbackend.model.domain.User;
 import com.yuejiangw.usercenterbackend.service.UserService;
 import com.yuejiangw.usercenterbackend.mapper.UserMapper;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -19,11 +20,13 @@ import java.util.regex.Pattern;
 * @createDate 2024-05-13 15:31:15
 */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User>
-    implements UserService{
+@Slf4j
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService{
 
     @Resource
     private UserMapper userMapper;
+
+    private static final String SALT = "usercenter";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -45,7 +48,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return -1;
         }
 
-        // 密码和校验密码相关
+        // 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
             return -1;
         }
@@ -59,7 +62,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         // 2. 加密
-        final String SALT = "usercenter";
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
 
         // 3. 插入数据
@@ -71,6 +73,44 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return -1;
         }
         return user.getId();
+    }
+
+    @Override
+    public User userLogin(String userAccount, String userPassword) {
+        // 1. 校验
+        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
+            return null;
+        }
+        if (userAccount.length() < 4) {
+            return null;
+        }
+        if (userPassword.length() < 8) {
+            return null;
+        }
+
+        // 账户不能包含特殊字符
+        String validPattern = "\\pP|\\pS|\\s+";
+        Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
+        if (!matcher.find()) {
+            return null;
+        }
+
+        // 2. 加密
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+
+        // 查询用户是否存在
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("userPassword", encryptPassword);
+        User user = userMapper.selectOne(queryWrapper);
+
+        // 用户不存在
+        if (user == null) {
+            log.info("user login failed, userAccount cannot match userPassword");
+            return null;
+        }
+
+        return user;
     }
 }
 
