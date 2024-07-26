@@ -36,24 +36,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
+            log.error("userAccount, userPassword, checkPassword can not be null");
             return -1;
         }
         if (userAccount.length() < 4) {
+            log.error("userAccount's length should >= 4");
             return -1;
         }
         if (userPassword.length() < 8 || checkPassword.length() < 8) {
+            log.error("userPassword's length should >= 8");
             return -1;
         }
 
         // 账户不能包含特殊字符
-        String validPattern = "\\pP|\\pS|\\s+";
+        String validPattern = "^[a-zA-Z0-9]+$";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
-        if (!matcher.find()) {
+        if (!matcher.matches()) {
+            log.error("You can only use digits and English letters to create your account");
             return -1;
         }
 
         // 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
+            log.error("Make sure the checkPassword is the same as the password you set");
             return -1;
         }
 
@@ -62,6 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("userAccount", userAccount);
         long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
+            log.error("This account has already been created, please login or use a different account name");
             return -1;
         }
 
@@ -74,6 +80,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUserPassword(encryptPassword);
         boolean saveResult = this.save(user);
         if (!saveResult) {
+            log.error("User can not be created");
             return -1;
         }
         return user.getId();
@@ -84,19 +91,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             // TODO 修改为自定义异常
+            log.error("userAccount and userPassword can not be empty");
             return null;
         }
         if (userAccount.length() < 4) {
+            log.error("userAccount's length mush >= 4");
             return null;
         }
         if (userPassword.length() < 8) {
+            log.error("userPassword's length mush >= 8");
             return null;
         }
 
         // 账户不能包含特殊字符
-        String validPattern = "\\pP|\\pS|\\s+";
+        String validPattern = "^[a-zA-Z0-9]+$";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
-        if (!matcher.find()) {
+        if (!matcher.matches()) {
+            log.error("You can only use digits and English letters to create your account");
             return null;
         }
 
