@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class User implements Serializable {
     /**
-     * id
+     *
      */
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -74,6 +74,11 @@ public class User implements Serializable {
      */
     @TableLogic
     private Integer isDelete;
+
+    /**
+     * 用户角色 0 - 普通用户 1 - 管理员
+     */
+    private Integer userRole;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
