@@ -1,5 +1,4 @@
 package com.yuejiangw.usercenterbackend.service.impl;
-import java.util.Date;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,8 +12,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.yuejiangw.usercenterbackend.constant.UserConstant.ADMIN_ROLE;
+import static com.yuejiangw.usercenterbackend.constant.UserConstant.USER_LOGIN_STATE;
+
 
 /**
 * @author yuejiangwu
@@ -29,8 +34,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserMapper userMapper;
 
     private static final String SALT = "usercenter";
-
-    private static final String USER_LOGIN_STATE = "userLoginState";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -127,6 +130,55 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         // 3. 用户脱敏
+        User safetyUser = desensitize(user);
+
+        // 4. 记录用户的登录态
+        request.getSession().setAttribute(USER_LOGIN_STATE, safetyUser);
+
+        return safetyUser;
+    }
+
+    @Override
+    public List<User> userSearch(String username, HttpServletRequest request) {
+        // TODO unit test
+        // 仅管理员可查询
+        if (!isAdmin(request)) {
+            return new ArrayList<>();
+        }
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(username)) {
+            queryWrapper.like("username", username);
+        }
+
+        return userMapper.selectList(queryWrapper).stream().map(this::desensitize).toList();
+    }
+
+    @Override
+    public boolean deleteUser(long id, HttpServletRequest request) {
+        // TODO unit test
+        // 仅管理员可删除
+        if (!isAdmin(request)) {
+            return false;
+        }
+
+        int rows = userMapper.deleteById(id);
+        log.info("Delete {} rows", rows);
+        return true;
+    }
+
+    private boolean isAdmin(HttpServletRequest request) {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User user = (User) userObj;
+        return user != null && user.getUserRole() == ADMIN_ROLE;
+    }
+
+    /**
+     * 用户数据脱敏
+     * @param user
+     * @return
+     */
+    private User desensitize(User user) {
         User safetyUser = new User();
         safetyUser.setId(user.getId());
         safetyUser.setUsername(user.getUsername());
@@ -137,9 +189,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         safetyUser.setEmail(user.getEmail());
         safetyUser.setUserStatus(user.getUserStatus());
         safetyUser.setCreateTime(user.getCreateTime());
-
-        // 4. 记录用户的登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE, safetyUser);
+        safetyUser.setUserRole(user.getUserRole());
 
         return safetyUser;
     }

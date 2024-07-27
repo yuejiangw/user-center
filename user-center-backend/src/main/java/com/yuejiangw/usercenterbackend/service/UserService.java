@@ -4,6 +4,8 @@ import com.yuejiangw.usercenterbackend.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 /**
 * 用户服务
 * @author yuejiangwu
@@ -28,4 +30,8 @@ public interface UserService extends IService<User> {
      * @return 脱敏后的用户信息
      */
     User userLogin(String userAccount, String userPassword, HttpServletRequest request);
+
+    List<User> userSearch(String username, HttpServletRequest request);
+
+    boolean deleteUser(final long id, HttpServletRequest request);
 }

@@ -7,10 +7,9 @@ import com.yuejiangw.usercenterbackend.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -50,5 +49,15 @@ public class UserController {
         }
 
         return userService.userLogin(userAccount, userPassword, httpServletRequest);
+    }
+
+    @GetMapping("/search")
+    public List<User> searchUsers(String username, HttpServletRequest request) {
+        return userService.userSearch(username, request);
+    }
+
+    @PostMapping("/delete")
+    public boolean deleteUser(long id, HttpServletRequest request) {
+        return userService.deleteUser(id, request);
     }
 }
