@@ -1,8 +1,10 @@
-import {Footer} from '@/components';
-import {login} from '@/services/ant-design-pro/api';
+import { Footer } from '@/components';
+import { login } from '@/services/ant-design-pro/api';
+import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,
   LockOutlined,
+  MobileOutlined,
   TaobaoCircleOutlined,
   UserOutlined,
   WeiboCircleOutlined,
@@ -12,14 +14,13 @@ import {
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
-import {Helmet, history, useModel} from '@umijs/max';
-import {Alert, Tabs, message} from 'antd';
-import {createStyles} from 'antd-style';
-import React, {useState} from 'react';
-import {flushSync} from 'react-dom';
+import { Helmet, history, useModel } from '@umijs/max';
+import { Alert, Tabs, message } from 'antd';
+import { createStyles } from 'antd-style';
+import React, { useState } from 'react';
+import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
-
-const useStyles = createStyles(({token}) => {
+const useStyles = createStyles(({ token }) => {
   return {
     action: {
       marginLeft: '8px',
@@ -55,22 +56,22 @@ const useStyles = createStyles(({token}) => {
   };
 });
 const ActionIcons = () => {
-  const {styles} = useStyles();
+  const { styles } = useStyles();
   return (
     <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action}/>
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action}/>
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action}/>
+      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action} />
+      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action} />
+      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action} />
     </>
   );
 };
 const Lang = () => {
-  const {styles} = useStyles();
+  const { styles } = useStyles();
   return;
 };
 const LoginMessage: React.FC<{
   content: string;
-}> = ({content}) => {
+}> = ({ content }) => {
   return (
     <Alert
       style={{
@@ -83,11 +84,11 @@ const LoginMessage: React.FC<{
   );
 };
 
-const Register: React.FC = () => {
+const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
-  const {initialState, setInitialState} = useModel('@@initialState');
-  const {styles} = useStyles();
+  const { initialState, setInitialState } = useModel('@@initialState');
+  const { styles } = useStyles();
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
@@ -102,7 +103,7 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      // 登录
+      // 注册
       const user = await login({
         ...values,
         type,
@@ -125,15 +126,15 @@ const Register: React.FC = () => {
     }
   };
 
-  const {status, type: loginType} = userLoginState;
+  const { status, type: loginType } = userLoginState;
   return (
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'登录'}- {Settings.title}
+          {'注册'}- {Settings.title}
         </title>
       </Helmet>
-      <Lang/>
+      <Lang />
       <div
         style={{
           flex: '1',
@@ -145,13 +146,13 @@ const Register: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.svg"/>}
+          logo={<img alt="logo" src="/logo.svg" />}
           title="User Center"
           subTitle={'A fullstack project based on SpringBoot and React'}
           initialValues={{
             autoLogin: true,
           }}
-          actions={['Or login with :', <ActionIcons key="icons"/>]}
+          actions={['Or login with :', <ActionIcons key="icons" />]}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
@@ -163,13 +164,13 @@ const Register: React.FC = () => {
             items={[
               {
                 key: 'account',
-                label: 'Login with Account & Password',
+                label: 'Register',
               }
             ]}
           />
 
           {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的用户名和密码(admin/ant.design)'}/>
+            <LoginMessage content={'错误的用户名和密码(admin/ant.design)'} />
           )}
           {type === 'account' && (
             <>
@@ -177,9 +178,9 @@ const Register: React.FC = () => {
                 name="userAccount"
                 fieldProps={{
                   size: 'large',
-                  prefix: <UserOutlined/>,
+                  prefix: <UserOutlined />,
                 }}
-                placeholder={'用户名: admin or user'}
+                placeholder={'Account'}
                 rules={[
                   {
                     required: true,
@@ -191,9 +192,9 @@ const Register: React.FC = () => {
                 name="userPassword"
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined/>,
+                  prefix: <LockOutlined />,
                 }}
-                placeholder={'密码: ant.design'}
+                placeholder={'Password'}
                 rules={[
                   {
                     required: true,
@@ -201,32 +202,47 @@ const Register: React.FC = () => {
                   },
                 ]}
               />
+              <ProFormText.Password
+                name="checkPassword"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined />,
+                }}
+                placeholder={'Input password again'}
+                rules={[
+                  {
+                    required: true,
+                    message: '校验密码是必填项！',
+                  },
+                ]}
+              />
             </>
           )}
 
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误"/>}
+          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
 
           <div
             style={{
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
-            <a
-              style={{float: 'right'}}
-              href={'/user/register'}
-              // target="_blank"
-              rel="noreferrer"
-            >
-              Register
-            </a>
+
+            <p>
+              Already have account?
+              <a
+                style={{float: 'right'}}
+                href={'/user/login'}
+                // target="_blank"
+                rel="noreferrer"
+              >
+                Login
+              </a>
+            </p>
           </div>
         </LoginForm>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
-export default Register;
+export default Login;
