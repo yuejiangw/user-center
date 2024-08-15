@@ -14,48 +14,13 @@ import {
 } from '@ant-design/pro-components';
 import {Helmet, history, useModel} from '@umijs/max';
 import {Alert, Tabs, message} from 'antd';
-import {createStyles} from 'antd-style';
 import React, {useState} from 'react';
 import {flushSync} from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+import {useAuthStyles} from "@/common/styles";
 
-const useStyles = createStyles(({token}) => {
-  return {
-    action: {
-      marginLeft: '8px',
-      color: 'rgba(0, 0, 0, 0.2)',
-      fontSize: '24px',
-      verticalAlign: 'middle',
-      cursor: 'pointer',
-      transition: 'color 0.3s',
-      '&:hover': {
-        color: token.colorPrimaryActive,
-      },
-    },
-    lang: {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    },
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
-      backgroundSize: '100% 100%',
-    },
-  };
-});
 const ActionIcons = () => {
-  const {styles} = useStyles();
+  const {styles} = useAuthStyles();
   return (
     <>
       <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action}/>
@@ -64,10 +29,7 @@ const ActionIcons = () => {
     </>
   );
 };
-const Lang = () => {
-  const {styles} = useStyles();
-  return;
-};
+
 const LoginMessage: React.FC<{
   content: string;
 }> = ({content}) => {
@@ -83,13 +45,14 @@ const LoginMessage: React.FC<{
   );
 };
 
-const Register: React.FC = () => {
+const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const {initialState, setInitialState} = useModel('@@initialState');
-  const {styles} = useStyles();
+  const {styles} = useAuthStyles();
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
+    console.log("userInfo: " + userInfo);
     if (userInfo) {
       flushSync(() => {
         setInitialState((s) => ({
@@ -110,7 +73,8 @@ const Register: React.FC = () => {
       if (user) {
         const defaultLoginSuccessMessage = 'Login Successful!';
         message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
+        const user = await fetchUserInfo();
+        console.log("handleSubmit: " + user);
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;
@@ -130,10 +94,9 @@ const Register: React.FC = () => {
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'登录'}- {Settings.title}
+          {'Login'}- {Settings.title}
         </title>
       </Helmet>
-      <Lang/>
       <div
         style={{
           flex: '1',
@@ -141,6 +104,11 @@ const Register: React.FC = () => {
         }}
       >
         <LoginForm
+          submitter={{
+            searchConfig: {
+              submitText: 'Login'
+            }
+          }}
           contentStyle={{
             minWidth: 280,
             maxWidth: '75vw',
@@ -163,7 +131,7 @@ const Register: React.FC = () => {
             items={[
               {
                 key: 'account',
-                label: 'Login with Account & Password',
+                label: 'Login',
               }
             ]}
           />
@@ -229,4 +197,4 @@ const Register: React.FC = () => {
     </div>
   );
 };
-export default Register;
+export default Login;

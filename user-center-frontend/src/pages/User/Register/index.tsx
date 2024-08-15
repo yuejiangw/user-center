@@ -1,77 +1,35 @@
-import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import {Footer} from '@/components';
+import {register} from '@/services/ant-design-pro/api';
 import {
   AlipayCircleOutlined,
   LockOutlined,
-  MobileOutlined,
   TaobaoCircleOutlined,
   UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
-import { Helmet, history, useModel } from '@umijs/max';
-import { Alert, Tabs, message } from 'antd';
-import { createStyles } from 'antd-style';
-import React, { useState } from 'react';
-import { flushSync } from 'react-dom';
+import {LoginForm, ProFormText,} from '@ant-design/pro-components';
+import {Helmet, history, useModel} from '@umijs/max';
+import {Alert, message, Tabs} from 'antd';
+import React, {useState} from 'react';
+import {flushSync} from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
-const useStyles = createStyles(({ token }) => {
-  return {
-    action: {
-      marginLeft: '8px',
-      color: 'rgba(0, 0, 0, 0.2)',
-      fontSize: '24px',
-      verticalAlign: 'middle',
-      cursor: 'pointer',
-      transition: 'color 0.3s',
-      '&:hover': {
-        color: token.colorPrimaryActive,
-      },
-    },
-    lang: {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    },
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
-      backgroundSize: '100% 100%',
-    },
-  };
-});
+import {useAuthStyles} from "@/common/styles";
+
+
 const ActionIcons = () => {
-  const { styles } = useStyles();
+  const {styles} = useAuthStyles();
   return (
     <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action} />
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action} />
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action} />
+      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action}/>
+      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action}/>
+      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action}/>
     </>
   );
 };
-const Lang = () => {
-  const { styles } = useStyles();
-  return;
-};
-const LoginMessage: React.FC<{
+
+const RegisterMessage: React.FC<{
   content: string;
-}> = ({ content }) => {
+}> = ({content}) => {
   return (
     <Alert
       style={{
@@ -84,11 +42,10 @@ const LoginMessage: React.FC<{
   );
 };
 
-const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+const Register: React.FC = () => {
   const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
-  const { styles } = useStyles();
+  const {initialState, setInitialState} = useModel('@@initialState');
+  const {styles} = useAuthStyles();
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
@@ -101,40 +58,41 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: API.RegisterParams) => {
+    const {userAccount, userPassword, checkPassword} = values;
+    // 校验
+    if (userPassword !== checkPassword) {
+      message.error('You must input the same password');
+      return;
+    }
+
     try {
       // 注册
-      const user = await login({
+      const id = await register({
         ...values,
         type,
       });
-      if (user) {
-        const defaultLoginSuccessMessage = 'Login Successful!';
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        return;
-      }
-      console.log(user);
+      const defaultRegisterSuccessMessage = 'Register Successful!';
+      message.success(defaultRegisterSuccessMessage);
+      await fetchUserInfo();
+      history.push('/user/login?redirect');
+      // console.log(id);
+      return;
       // 如果失败去设置用户错误信息
-      setUserLoginState(user);
     } catch (error) {
-      const defaultLoginFailureMessage = 'Login Failed, please try again!';
+      const defaultRegisterFailureMessage = 'Register Failed, please try again!';
       console.log(error);
-      message.error(defaultLoginFailureMessage);
+      message.error(defaultRegisterFailureMessage);
     }
   };
 
-  const { status, type: loginType } = userLoginState;
   return (
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'注册'}- {Settings.title}
+          {'Register'}- {Settings.title}
         </title>
       </Helmet>
-      <Lang />
       <div
         style={{
           flex: '1',
@@ -142,17 +100,22 @@ const Login: React.FC = () => {
         }}
       >
         <LoginForm
+          submitter={{
+            searchConfig: {
+              submitText: 'Register'
+            }
+          }}
           contentStyle={{
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.svg" />}
+          logo={<img alt="logo" src="/logo.svg"/>}
           title="User Center"
           subTitle={'A fullstack project based on SpringBoot and React'}
           initialValues={{
             autoLogin: true,
           }}
-          actions={['Or login with :', <ActionIcons key="icons" />]}
+          actions={['Or login with :', <ActionIcons key="icons"/>]}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
@@ -169,8 +132,8 @@ const Login: React.FC = () => {
             ]}
           />
 
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的用户名和密码(admin/ant.design)'} />
+          {status === 'error' && (
+            <RegisterMessage content={'错误的用户名和密码(admin/ant.design)'}/>
           )}
           {type === 'account' && (
             <>
@@ -178,7 +141,7 @@ const Login: React.FC = () => {
                 name="userAccount"
                 fieldProps={{
                   size: 'large',
-                  prefix: <UserOutlined />,
+                  prefix: <UserOutlined/>,
                 }}
                 placeholder={'Account'}
                 rules={[
@@ -192,7 +155,7 @@ const Login: React.FC = () => {
                 name="userPassword"
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined />,
+                  prefix: <LockOutlined/>,
                 }}
                 placeholder={'Password'}
                 rules={[
@@ -206,7 +169,7 @@ const Login: React.FC = () => {
                 name="checkPassword"
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined />,
+                  prefix: <LockOutlined/>,
                 }}
                 placeholder={'Input password again'}
                 rules={[
@@ -219,8 +182,6 @@ const Login: React.FC = () => {
             </>
           )}
 
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
-
           <div
             style={{
               marginBottom: 24,
@@ -232,7 +193,6 @@ const Login: React.FC = () => {
               <a
                 style={{float: 'right'}}
                 href={'/user/login'}
-                // target="_blank"
                 rel="noreferrer"
               >
                 Login
@@ -241,8 +201,8 @@ const Login: React.FC = () => {
           </div>
         </LoginForm>
       </div>
-      <Footer />
+      <Footer/>
     </div>
   );
 };
-export default Login;
+export default Register;
