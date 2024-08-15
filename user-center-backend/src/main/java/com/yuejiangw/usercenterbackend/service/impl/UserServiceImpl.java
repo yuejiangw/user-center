@@ -178,7 +178,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param user
      * @return
      */
-    private User desensitize(User user) {
+    @Override
+    public User desensitize(User user) {
+        if (user == null) {
+            return null;
+        }
+
         User safetyUser = new User();
         safetyUser.setId(user.getId());
         safetyUser.setUsername(user.getUsername());

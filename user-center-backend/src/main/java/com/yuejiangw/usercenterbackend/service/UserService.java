@@ -34,4 +34,6 @@ public interface UserService extends IService<User> {
     List<User> userSearch(String username, HttpServletRequest request);
 
     boolean deleteUser(final long id, HttpServletRequest request);
+
+    User desensitize(User user);
 }
