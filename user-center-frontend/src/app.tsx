@@ -7,6 +7,7 @@ import type {RunTimeLayoutConfig} from '@umijs/max';
 import {history, Link} from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import {errorConfig} from './requestErrorConfig';
+import {DEFAULT_AVATAR} from "@/common/constants";
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -25,17 +26,14 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const user = await queryCurrentUser();
-      console.log(`FetchUserInfo: ${user}`);
       return user;
     } catch (error) {
-      console.error("Fuck you")
       history.push(loginPath);
     }
     return undefined;
   };
   // 如果是无需登录页面，不需要获取用户当前的登录信息
   const { location } = history;
-  console.log('current path: ', location.pathname);
   if (NO_LOGIN_WHITE_LIST.includes(location.pathname)) {
     return {
       fetchUserInfo,
@@ -43,7 +41,6 @@ export async function getInitialState(): Promise<{
     };
   }
   const currentUser = await fetchUserInfo();
-  console.log('current user in app.tsx: ', currentUser);
   return {
     fetchUserInfo,
     currentUser,
