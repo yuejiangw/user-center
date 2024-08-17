@@ -12,8 +12,8 @@ export default [
     access: 'canAdmin',
     name: '管理员页面',
     routes: [
-      {path: '/admin', redirect: '/admin/sub-page'},
-      {path: '/admin/sub-page', component: './Admin'},
+      {path: '/admin/user-manage', name: '用户管理', icon: 'smile', component: './Admin/UserManage'},
+      {path: '/admin', component: './Admin/Admin'},
     ],
   },
   {icon: 'table', path: '/list', component: './TableList', name: '表格页'},
