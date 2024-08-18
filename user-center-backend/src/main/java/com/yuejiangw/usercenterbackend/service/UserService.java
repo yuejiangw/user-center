@@ -36,4 +36,6 @@ public interface UserService extends IService<User> {
     boolean deleteUser(final long id, HttpServletRequest request);
 
     User desensitize(User user);
+
+    Integer userLogout(HttpServletRequest request);
 }

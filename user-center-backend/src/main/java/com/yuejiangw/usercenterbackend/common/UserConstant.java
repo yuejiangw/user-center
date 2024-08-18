@@ -1,4 +1,4 @@
-package com.yuejiangw.usercenterbackend.constant;
+package com.yuejiangw.usercenterbackend.common;
 
 public interface UserConstant {
     /**
@@ -15,4 +15,8 @@ public interface UserConstant {
      * 管理员权限
      */
     int ADMIN_ROLE = 1;
+
+    String MESSAGE_OK = "ok";
+
+    int CODE_OK = 0;
 }
