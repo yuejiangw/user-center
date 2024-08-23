@@ -16,4 +16,8 @@ public class ResponseUtils {
     public static BaseResponse error(ErrorCode errorCode, String message) {
         return new BaseResponse(errorCode, message);
     }
+
+    public static BaseResponse error(ErrorCode errorCode, String message, String description) {
+        return new BaseResponse(errorCode, message, description);
+    }
 }
