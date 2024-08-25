@@ -29,7 +29,6 @@ public class UserController {
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody final UserRegisterRequest request) {
         if (request == null) {
-//            return ResponseUtils.error(ErrorCode.PARAMS_ERROR);
             throw new CustomException(ErrorCode.PARAMS_ERROR);
         }
 
@@ -49,7 +48,7 @@ public class UserController {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if (currentUser == null) {
-            return null;
+            throw new CustomException(ErrorCode.NOT_LOGIN);
         }
         // 尽管已经获取了登录信息但还是建议从数据库中取数据，因为用户信息可能会变化但 session 中的信息不一定会变，以数据库为准
         long userId = currentUser.getId();
