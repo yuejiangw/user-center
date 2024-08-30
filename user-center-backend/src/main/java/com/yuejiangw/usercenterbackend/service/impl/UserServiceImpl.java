@@ -31,7 +31,7 @@ import static com.yuejiangw.usercenterbackend.common.UserConstant.USER_LOGIN_STA
 */
 @Service
 @Slf4j
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService{
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Resource
     private UserMapper userMapper;
