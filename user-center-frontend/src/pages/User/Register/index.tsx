@@ -61,6 +61,15 @@ const Register: React.FC = () => {
   const handleSubmit = async (values: API.RegisterParams) => {
     const {userAccount, userPassword, checkPassword} = values;
     // 校验
+    if (userAccount === undefined || userPassword === undefined || checkPassword === undefined) {
+      message.error('You must input the userAccount, password, and checkPassword');
+      return;
+    }
+    const regex = /^[a-zA-Z0-9]+$/;
+    if (!regex.test(userAccount)) {
+      message.error('Your account should only contain English letters and numbers');
+      return;
+    }
     if (userPassword !== checkPassword) {
       message.error('You must input the same password');
       return;
@@ -68,21 +77,19 @@ const Register: React.FC = () => {
 
     try {
       // 注册
-      const id = await register({
-        ...values,
-        type,
-      });
-      const defaultRegisterSuccessMessage = 'Register Successful!';
-      message.success(defaultRegisterSuccessMessage);
-      await fetchUserInfo();
-      history.push('/user/login?redirect');
-      // console.log(id);
-      return;
+      const response = await register({...values, type});
+      if (response.data) {
+        const defaultRegisterSuccessMessage = 'Register Successful!';
+        message.success(defaultRegisterSuccessMessage);
+        await fetchUserInfo();
+        history.push('/user/login?redirect');
+        return;
+      }
+    } catch (error: any) {
       // 如果失败去设置用户错误信息
-    } catch (error) {
       const defaultRegisterFailureMessage = 'Register Failed, please try again!';
       console.log(error);
-      message.error(defaultRegisterFailureMessage);
+      message.error(error.message ?? defaultRegisterFailureMessage);
     }
   };
 

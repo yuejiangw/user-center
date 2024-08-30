@@ -47,6 +47,7 @@ const LoginMessage: React.FC<{
 
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  // const [userLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const {initialState, setInitialState} = useModel('@@initialState');
   const {styles} = useAuthStyles();
@@ -66,25 +67,21 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
-      const user = await login({
-        ...values,
-        type,
-      });
-      if (user) {
+      const response = await login({...values, type,});
+      alert(response)
+      if (response) {
         const defaultLoginSuccessMessage = 'Login Successful!';
         message.success(defaultLoginSuccessMessage);
-        const user = await fetchUserInfo();
-        console.log("handleSubmit: " + user);
+        await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;
       }
-      console.log(user);
       // 如果失败去设置用户错误信息
-      setUserLoginState(user);
+      setUserLoginState(response);
+      // setUserLoginState(response.data);
     } catch (error) {
       const defaultLoginFailureMessage = 'Login Failed, please try again!';
-      console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };

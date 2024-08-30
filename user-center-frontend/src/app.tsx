@@ -23,13 +23,16 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
+  alert(process.env.NODE_ENV);
   const fetchUserInfo = async () => {
     try {
-      const user = await queryCurrentUser();
+      const user  = await queryCurrentUser();
+      console.log(`Get current username: ${user.username}, user avatar: ${user.avatarUrl}`);
       return user;
     } catch (error) {
       history.push(loginPath);
     }
+    console.log("Can't get current user");
     return undefined;
   };
   // 如果是无需登录页面，不需要获取用户当前的登录信息
@@ -53,7 +56,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
-      src: initialState?.currentUser?.avatarUrl,
+      // add default avatar url
+      src: initialState?.currentUser?.avatarUrl ?? DEFAULT_AVATAR,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
