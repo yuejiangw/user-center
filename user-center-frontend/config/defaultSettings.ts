@@ -9,7 +9,7 @@ const Settings: ProLayoutProps & {
 } = {
   navTheme: "light",
   colorPrimary: "#722ED1",
-  layout: "side",
+  layout: "mix",
   contentWidth: "Fluid",
   fixedHeader: false,
   fixSiderbar: true,
@@ -17,8 +17,8 @@ const Settings: ProLayoutProps & {
   splitMenus: false,
   title: 'Go Valley',
   pwa: true,
-  // logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
-  logo: 'logo-ztgg.png',
+  // free logo：https://www.reshot.com/free-svg-icons/item/blogger-BVQRCAPDM8/
+  logo: 'logo.svg',
   iconfontUrl: '',
   token: {
     // 参见ts声明，demo 见文档，通过token 修改样式
@@ -28,4 +28,3 @@ const Settings: ProLayoutProps & {
 };
 
 export default Settings;
-
