@@ -23,7 +23,7 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
-  alert(process.env.NODE_ENV);
+  // alert(process.env.NODE_ENV);
   const fetchUserInfo = async () => {
     try {
       const user  = await queryCurrentUser();
