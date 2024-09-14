@@ -38,17 +38,15 @@ request.interceptors.response.use(async (response, options): Promise<any> => {
   const res = await response.clone().json();
   if (res.code === 0) {
     return res.data;
-  }
-  // else if (res.code === 40100) {
-  //   message.error('Please login first');
-  //   history.replace({
-  //     pathname: '/user/login',
-  //     search: stringify({
-  //       redirect: location.pathname,
-  //     }),
-  //   });
-  // }
-  else {
+  } else if (res.code === 40100) {
+    message.error('Please login first');
+    history.replace({
+      pathname: '/user/login',
+      search: stringify({
+        redirect: location.pathname,
+      }),
+    });
+  } else {
     message.error(res.description)
   }
   return res.data;
