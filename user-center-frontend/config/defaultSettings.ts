@@ -1,8 +1,6 @@
 import { ProLayoutProps } from '@ant-design/pro-components';
 
-/**
- * @name
- */
+
 const Settings: ProLayoutProps & {
   pwa?: boolean;
   logo?: string;
@@ -15,7 +13,7 @@ const Settings: ProLayoutProps & {
   fixSiderbar: true,
   colorWeak: false,
   splitMenus: false,
-  title: 'Go Valley',
+  title: 'Teacher Center - Go Valley',
   pwa: true,
   // free logo：https://www.reshot.com/free-svg-icons/item/blogger-BVQRCAPDM8/
   logo: 'logo.svg',
