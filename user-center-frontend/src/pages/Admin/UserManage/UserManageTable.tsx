@@ -13,25 +13,26 @@ const columns: ProColumns<API.CurrentUser>[] = [
     width: 48,
   },
   {
-    title: 'User Name',
+    title: 'Username',
     dataIndex: 'username',
     copyable: true,
     ellipsis: true,
     tooltip: 'tooltip example, will ellipsis automatically if the title is too long',
   },
   {
-    title: 'User Account',
+    title: 'Account',
     dataIndex: 'userAccount',
     copyable: true,
     ellipsis: true,
   },
   {
-    title: 'User Avatar',
+    title: 'Avatar',
     dataIndex: 'avatarUrl',
     render: (_, record) => {
       return <Image src={record.avatarUrl} fallback={DEFAULT_AVATAR} width={50} height={50} />
     },
     ellipsis: true,
+    search: false
   },
   {
     title: 'Gender',
@@ -51,16 +52,20 @@ const columns: ProColumns<API.CurrentUser>[] = [
     ellipsis: true,
   },
   {
-    title: 'User Status',
+    title: 'Status',
     dataIndex: 'userStatus',
     ellipsis: true,
+    valueEnum: {
+      0: {text: 'Active', status: 'Success'},
+      1: {text: 'Deactivate', status: 'Default'}
+    }
   },
   {
-    title: 'User Role',
+    title: 'Role',
     dataIndex: 'userRole',
     ellipsis: true,
     valueEnum: {
-      0: {text: 'Normal User', status: 'Default'},
+      0: {text: 'User', status: 'Default'},
       1: {text: 'Admin', status: 'Success'}
     }
   },
@@ -68,9 +73,10 @@ const columns: ProColumns<API.CurrentUser>[] = [
     title: 'Create Time',
     dataIndex: 'createTime',
     valueType: 'dateTime',
+    search: false
   },
   {
-    title: '操作',
+    title: 'Operations',
     valueType: 'option',
     key: 'option',
     render: (text, record, _, action) => [
@@ -80,24 +86,24 @@ const columns: ProColumns<API.CurrentUser>[] = [
           action?.startEditable?.(record.id);
         }}
       >
-        编辑
+        Edit
       </a>,
       <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
-        查看
+        View
       </a>,
       <TableDropdown
         key="actionGroup"
         onSelect={() => action?.reload()}
         menus={[
-          { key: 'copy', name: '复制' },
-          { key: 'delete', name: '删除' },
+          { key: 'copy', name: 'Copy' },
+          { key: 'delete', name: 'Delete' },
         ]}
       />,
     ],
   },
 ];
 
-const Table = () => {
+const UserManageTable = () => {
   const actionRef = useRef<ActionType>();
   return (
     <ProTable<API.CurrentUser>
@@ -105,9 +111,7 @@ const Table = () => {
       actionRef={actionRef}
       cardBordered
       request={async (params, sort, filter) => {
-        console.log(sort, filter);
-        const userList = await searchUsers();
-        console.log(userList);
+        const userList = await searchUsers(params);
         return {
           data: userList
         }
@@ -151,7 +155,7 @@ const Table = () => {
         onChange: (page) => console.log(page),
       }}
       dateFormatter="string"
-      headerTitle="高级表格"
+      headerTitle="Users"
       toolBarRender={() => [
         <Button
           key="button"
@@ -191,4 +195,4 @@ const Table = () => {
   );
 };
 
-export default Table;
+export default UserManageTable;
