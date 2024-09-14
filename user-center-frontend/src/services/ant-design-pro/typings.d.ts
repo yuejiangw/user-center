@@ -71,6 +71,16 @@ declare namespace API {
     type?: string;
   };
 
+  type UpdateParams = {
+    id: number;
+    username: string;
+    userAccount: string;
+    avatarUrl?: string;
+    gender?: number;
+    phone?: stirng;
+    email?: string;
+  }
+
   type BaseResponse<T> = {
     code: number,
     data: T,
