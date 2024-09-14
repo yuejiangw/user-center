@@ -1,34 +1,20 @@
 import {Footer} from '@/components';
 import {login} from '@/services/ant-design-pro/api';
 import {
-  AlipayCircleOutlined,
   LockOutlined,
-  TaobaoCircleOutlined,
   UserOutlined,
-  WeiboCircleOutlined,
 } from '@ant-design/icons';
 import {
   LoginForm,
-  ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
 import {Helmet, history, useModel} from '@umijs/max';
-import {Alert, Tabs, message} from 'antd';
+import {Alert, Tabs, message, Button} from 'antd';
 import React, {useState} from 'react';
 import {flushSync} from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
 import {useAuthStyles} from "@/common/styles";
 
-const ActionIcons = () => {
-  const {styles} = useAuthStyles();
-  return (
-    <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action}/>
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action}/>
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action}/>
-    </>
-  );
-};
 
 const LoginMessage: React.FC<{
   content: string;
@@ -47,7 +33,6 @@ const LoginMessage: React.FC<{
 
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-  // const [userLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const {initialState, setInitialState} = useModel('@@initialState');
   const {styles} = useAuthStyles();
@@ -68,7 +53,6 @@ const Login: React.FC = () => {
     try {
       // 登录
       const response = await login({...values, type,});
-      alert(response)
       if (response) {
         const defaultLoginSuccessMessage = 'Login Successful!';
         message.success(defaultLoginSuccessMessage);
@@ -79,7 +63,6 @@ const Login: React.FC = () => {
       }
       // 如果失败去设置用户错误信息
       setUserLoginState(response);
-      // setUserLoginState(response.data);
     } catch (error) {
       const defaultLoginFailureMessage = 'Login Failed, please try again!';
       message.error(defaultLoginFailureMessage);
@@ -111,12 +94,11 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src="/logo.svg"/>}
-          title="User Center"
+          title="Go Valley"
           subTitle={'A fullstack project based on SpringBoot and React'}
           initialValues={{
             autoLogin: true,
           }}
-          actions={['Or login with :', <ActionIcons key="icons"/>]}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
@@ -169,24 +151,18 @@ const Login: React.FC = () => {
             </>
           )}
 
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误"/>}
-
           <div
             style={{
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
-            <a
-              style={{float: 'right'}}
+            <Button
+              type={"link"}
               href={'/user/register'}
-              // target="_blank"
-              rel="noreferrer"
+              style={{ float: 'right', marginBottom: '20px' }}
             >
               Register
-            </a>
+            </Button>
           </div>
         </LoginForm>
       </div>
