@@ -17,11 +17,11 @@ import org.springframework.util.DigestUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.yuejiangw.usercenterbackend.common.UserConstant.ADMIN_ROLE;
-import static com.yuejiangw.usercenterbackend.common.UserConstant.USER_LOGIN_STATE;
+import static com.yuejiangw.usercenterbackend.common.UserConstant.*;
 
 
 /**
@@ -91,7 +91,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
-            // TODO 修改为自定义异常
             throw new CustomException(ErrorCode.PARAMS_ERROR, "userAccount, userPassword, checkPassword can not be null");
         }
         if (userAccount.length() < 4) {
@@ -132,7 +131,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public List<User> userSearch(String username, HttpServletRequest request) {
+    public List<User> userSearch(Map<String, String> queryParams, HttpServletRequest request) {
         // TODO unit test
         // 仅管理员可查询
         if (!isAdmin(request)) {
@@ -140,9 +139,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(username)) {
-            queryWrapper.like("username", username);
-        }
+        queryParams.forEach((key, value) -> {
+            if (EXACT_MATCH.contains(key)) {
+                queryWrapper.eq(key, value);
+            }
+            if (PATTERN_MATCH.contains(key)) {
+                queryWrapper.like(key, value);
+            }
+        });
 
         return userMapper.selectList(queryWrapper).stream().map(this::desensitize).toList();
     }
@@ -152,12 +156,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // TODO unit test
         // 仅管理员可删除
         if (!isAdmin(request)) {
-            return false;
+            throw new CustomException(ErrorCode.NO_AUTH, "Only Admin can delete a user");
         }
 
         int rows = userMapper.deleteById(id);
         log.info("Delete {} rows", rows);
         return true;
+    }
+
+    @Override
+    public Long createUser(String userAccount, HttpServletRequest request) {
+        if (!isAdmin(request)) {
+            throw new CustomException(ErrorCode.NO_AUTH, "Only Admin can create a user, normal user please use Register API");
+        }
+
+        return userRegister(userAccount, DEFAULT_PASSWORD, DEFAULT_PASSWORD);
+    }
+
+    @Override
+    public boolean updateUser(User user) {
+        return userMapper.updateById(user) > 0;
     }
 
 

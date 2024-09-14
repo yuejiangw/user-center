@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * 用户服务
@@ -31,9 +32,13 @@ public interface UserService extends IService<User> {
      */
     User userLogin(String userAccount, String userPassword, HttpServletRequest request);
 
-    List<User> userSearch(String username, HttpServletRequest request);
+    List<User> userSearch(Map<String, String> queryParams, HttpServletRequest request);
 
     boolean deleteUser(final long id, HttpServletRequest request);
+
+    Long createUser(String userAccount, HttpServletRequest request);
+
+    boolean updateUser(User user);
 
     User desensitize(User user);
 

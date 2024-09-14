@@ -7,6 +7,7 @@ import com.yuejiangw.usercenterbackend.exception.CustomException;
 import com.yuejiangw.usercenterbackend.model.domain.User;
 import com.yuejiangw.usercenterbackend.model.request.UserLoginRequest;
 import com.yuejiangw.usercenterbackend.model.request.UserRegisterRequest;
+import com.yuejiangw.usercenterbackend.model.request.UserUpdateRequest;
 import com.yuejiangw.usercenterbackend.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.yuejiangw.usercenterbackend.common.UserConstant.*;
 
@@ -82,12 +84,38 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public BaseResponse<List<User>> searchUsers(final String username, final HttpServletRequest request) {
-        return ResponseUtils.success(userService.userSearch(username, request));
+    public BaseResponse<List<User>> searchUsers(@RequestParam Map<String, String> queryParams, final HttpServletRequest request) {
+        log.info(queryParams.toString());
+        return ResponseUtils.success(userService.userSearch(queryParams, request));
     }
 
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteUser(final long id, final HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteUser(@RequestParam final long id, final HttpServletRequest request) {
         return ResponseUtils.success(userService.deleteUser(id, request));
+    }
+
+    @PostMapping("/create")
+    public BaseResponse<Long> createUser(@RequestParam final String userAccount, final HttpServletRequest request) {
+        return ResponseUtils.success(userService.createUser(userAccount, request));
+    }
+
+    @PostMapping("/update")
+    public BaseResponse<Boolean> updateUser(@RequestBody final UserUpdateRequest request) {
+        if (request == null) {
+            throw new CustomException(ErrorCode.PARAMS_ERROR);
+        }
+
+        final User user = User.builder()
+                .id(request.getId())
+                .username(request.getUsername())
+                .userAccount(request.getUserAccount())
+                .avatarUrl(request.getAvatarUrl())
+                .gender(request.getGender())
+                .userPassword(request.getUserPassword())
+                .phone(request.getPhone())
+                .email(request.getEmail())
+                .build();
+
+        return ResponseUtils.success(userService.updateUser(user));
     }
 }
