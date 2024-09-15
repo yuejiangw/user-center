@@ -13,7 +13,7 @@ const Settings: ProLayoutProps & {
   fixSiderbar: true,
   colorWeak: false,
   splitMenus: false,
-  title: 'Teacher Center - Go Valley',
+  title: 'User Center',
   pwa: true,
   // free logo：https://www.reshot.com/free-svg-icons/item/blogger-BVQRCAPDM8/
   logo: 'logo.svg',

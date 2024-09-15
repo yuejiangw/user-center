@@ -1,45 +1,11 @@
 import {Footer} from '@/components';
-import {
-  AlipayCircleOutlined,
-  TaobaoCircleOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
-import {Helmet, useModel} from '@umijs/max';
-import {Alert} from 'antd';
+import {Helmet} from '@umijs/max';
 import React from 'react';
 import Settings from '../../../../config/defaultSettings';
 import {useAuthStyles} from "@/common/styles";
-import Table from './table'
-
-
-const ActionIcons = () => {
-  const {styles} = useAuthStyles();
-  return (
-    <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action}/>
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action}/>
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action}/>
-    </>
-  );
-};
-
-const RegisterMessage: React.FC<{
-  content: string;
-}> = ({content}) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
+import UserManageTable from './UserManageTable'
 
 const UserManage: React.FC = () => {
-  // const {initialState, setInitialState} = useModel('@@initialState');
   const {styles} = useAuthStyles();
 
   return (
@@ -55,7 +21,7 @@ const UserManage: React.FC = () => {
           padding: '32px 0',
         }}
       >
-      <Table />
+        <UserManageTable />
       </div>
       <Footer/>
     </div>

@@ -1,31 +1,17 @@
 import {Footer} from '@/components';
 import {register} from '@/services/ant-design-pro/api';
 import {
-  AlipayCircleOutlined,
   LockOutlined,
-  TaobaoCircleOutlined,
   UserOutlined,
-  WeiboCircleOutlined,
 } from '@ant-design/icons';
 import {LoginForm, ProFormText,} from '@ant-design/pro-components';
 import {Helmet, history, useModel} from '@umijs/max';
-import {Alert, message, Tabs} from 'antd';
+import {Alert, Button, message, Tabs} from 'antd';
 import React, {useState} from 'react';
 import {flushSync} from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
 import {useAuthStyles} from "@/common/styles";
 
-
-const ActionIcons = () => {
-  const {styles} = useAuthStyles();
-  return (
-    <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action}/>
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action}/>
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action}/>
-    </>
-  );
-};
 
 const RegisterMessage: React.FC<{
   content: string;
@@ -122,7 +108,6 @@ const Register: React.FC = () => {
           initialValues={{
             autoLogin: true,
           }}
-          actions={['Or login with :', <ActionIcons key="icons"/>]}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
@@ -194,16 +179,11 @@ const Register: React.FC = () => {
               marginBottom: 24,
             }}
           >
-
             <p>
               Already have account?
-              <a
-                style={{float: 'right'}}
-                href={'/user/login'}
-                rel="noreferrer"
-              >
+              <Button type={'link'} href={'/user/login'} style={{ float: 'right', marginBottom: '20px' }}>
                 Login
-              </a>
+              </Button>
             </p>
           </div>
         </LoginForm>

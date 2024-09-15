@@ -38,6 +38,10 @@ const columns: ProColumns<API.CurrentUser>[] = [
     title: 'Gender',
     dataIndex: 'gender',
     ellipsis: true,
+    valueEnum: {
+      0: {text: 'Female'},
+      1: {text: 'Male'}
+    }
   },
   {
     title: 'Phone',

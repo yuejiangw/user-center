@@ -94,7 +94,7 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src="/logo.svg"/>}
-          title="Go Valley"
+          title="User Center"
           subTitle={'A fullstack project based on SpringBoot and React'}
           initialValues={{
             autoLogin: true,
@@ -126,7 +126,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined/>,
                 }}
-                placeholder={'用户名: admin or user'}
+                placeholder={'Username: helloworld'}
                 rules={[
                   {
                     required: true,
@@ -140,7 +140,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined/>,
                 }}
-                placeholder={'密码: ant.design'}
+                placeholder={'Password: helloworld'}
                 rules={[
                   {
                     required: true,
@@ -156,13 +156,16 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <Button
-              type={"link"}
-              href={'/user/register'}
-              style={{ float: 'right', marginBottom: '20px' }}
-            >
-              Register
-            </Button>
+            <p>
+              New User?
+              <Button
+                type={"link"}
+                href={'/user/register'}
+                style={{ float: 'right', marginBottom: '20px' }}
+              >
+                Register
+              </Button>
+            </p>
           </div>
         </LoginForm>
       </div>

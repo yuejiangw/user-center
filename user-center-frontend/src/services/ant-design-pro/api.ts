@@ -47,9 +47,36 @@ export async function register(body: API.RegisterParams, options?: { [key: strin
 }
 
 /** 搜索用户 GET /api/user/search */
-export async function searchUsers(options?: { [key: string]: any }) {
+export async function searchUsers(params?: { [key: string]: any }, options?: { [key: string]: any }) {
   return request<API.BaseResponse<API.CurrentUser[]>>('/api/user/search', {
     method: 'GET',
+    params: params,
+    ...(options || {}),
+  });
+}
+
+/** 更新用户 POST /api/user/update */
+export async function updateUser(body: API.UpdateParams, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<boolean>>('/api/user/update', {
+    method: 'POST',
+      headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+  ...(options || {}),
+  });
+}
+
+/** 创建用户 POST /api/user/create?userAccount=? */
+export async function createUser(params: {userAccount: string}, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<number>>('/api/user/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: {
+      ...params
+    },
     ...(options || {}),
   });
 }
