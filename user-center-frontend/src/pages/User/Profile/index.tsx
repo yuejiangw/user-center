@@ -1,29 +1,21 @@
-import {Footer} from '@/components';
 import {Helmet} from '@umijs/max';
 import React from 'react';
-import {useAuthStyles} from "@/common/styles";
 import UserProfileForm from './UserProfileForm';
+import ProCard from "@ant-design/pro-card";
+import {PageContainer} from "@ant-design/pro-components";
 
 const Profile: React.FC = () => {
-  const {styles} = useAuthStyles();
-
   return (
-    <div id='usermanage' className={styles.container}>
+    <PageContainer>
       <Helmet>
         <title>
           User Profile
         </title>
       </Helmet>
-      <div
-        style={{
-          flex: '1',
-          padding: '32px 0',
-        }}
-      >
-      <UserProfileForm />
-      </div>
-      <Footer/>
-    </div>
+      <ProCard layout={'center'}>
+        <UserProfileForm />
+      </ProCard>
+    </PageContainer>
   );
 };
 export default Profile;

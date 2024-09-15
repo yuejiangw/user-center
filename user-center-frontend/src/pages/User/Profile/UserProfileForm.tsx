@@ -1,7 +1,7 @@
 import React from 'react';
 import {Avatar, message} from "antd";
 import {ProForm, ProFormDatePicker} from "@ant-design/pro-form";
-import {ProFormSelect, ProFormText} from "@ant-design/pro-components";
+import {FooterToolbar, ProFormSelect, ProFormText} from "@ant-design/pro-components";
 import {useModel} from "@@/exports";
 import {flushSync} from "react-dom";
 import {updateUser} from "@/services/ant-design-pro/api";
@@ -39,66 +39,75 @@ const UserProfileForm = () => {
       <ProForm
         layout="vertical"
         initialValues={initialState!.currentUser}
+        submitter={{
+          render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
+        }}
         onFinish={handleSubmit}
       >
-        <ProFormText
-          name="id"
-          label="用户 ID"
-          disabled
-        />
-        <ProFormText
-          name="username"
-          label="用户名"
-          placeholder="请输入用户名"
-          rules={[{ required: true, message: '用户名是必填项' }]}
-        />
-        <ProFormText
-          name="userAccount"
-          label="用户账号"
-          disabled
-        />
-        <ProFormText
-          name="email"
-          label="邮箱"
-          placeholder="请输入邮箱"
-          rules={[{ type: 'email', message: '请输入有效的邮箱地址' }]}
-        />
-        <ProFormText
-          name="phone"
-          label="手机号"
-          placeholder="请输入手机号"
-        />
-        <ProFormSelect
-          name="gender"
-          label="性别"
-          options={[
-            { label: '男', value: 1 },
-            { label: '女', value: 2 },
-          ]}
-        />
-        <ProFormDatePicker
-          name="createTime"
-          label="注册时间"
-          disabled
-        />
-        <ProFormSelect
-          name="userStatus"
-          label="用户状态"
-          options={[
-            { label: '正常', value: 0 },
-            { label: '禁用', value: 1 },
-          ]}
-          disabled
-        />
-        <ProFormSelect
-          name="userRole"
-          label="用户角色"
-          options={[
-            { label: '普通用户', value: 0 },
-            { label: '管理员', value: 1 },
-          ]}
-          disabled={true}
-        />
+        <ProForm.Group>
+          <ProFormText
+            name="id"
+            label="用户 ID"
+            disabled
+          />
+          <ProFormText
+            name="username"
+            label="用户名"
+            placeholder="请输入用户名"
+            rules={[{ required: true, message: '用户名是必填项' }]}
+          />
+          <ProFormText
+            name="userAccount"
+            label="用户账号"
+            disabled
+          />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormText
+            name="email"
+            label="邮箱"
+            placeholder="请输入邮箱"
+            rules={[{ type: 'email', message: '请输入有效的邮箱地址' }]}
+          />
+          <ProFormText
+            name="phone"
+            label="手机号"
+            placeholder="请输入手机号"
+          />
+          <ProFormSelect
+            name="gender"
+            label="性别"
+            options={[
+              { label: '男', value: 1 },
+              { label: '女', value: 2 },
+            ]}
+          />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormDatePicker
+            name="createTime"
+            label="注册时间"
+            disabled
+          />
+          <ProFormSelect
+            name="userStatus"
+            label="用户状态"
+            options={[
+              { label: '正常', value: 0 },
+              { label: '禁用', value: 1 },
+            ]}
+            disabled
+          />
+          <ProFormSelect
+            name="userRole"
+            label="用户角色"
+            options={[
+              { label: '普通用户', value: 0 },
+              { label: '管理员', value: 1 },
+            ]}
+            disabled={true}
+          />
+        </ProForm.Group>
       </ProForm>
     </div>
   );
