@@ -15,7 +15,7 @@ const Settings: ProLayoutProps & {
   splitMenus: false,
   title: 'User Center',
   pwa: true,
-  // free logo：https://www.reshot.com/free-svg-icons/item/blogger-BVQRCAPDM8/
+  // free logo：https://www.reshot.com/free-svg-icons/item/manage-9TZP4DM7S5/
   logo: 'logo.svg',
   iconfontUrl: '',
   token: {
