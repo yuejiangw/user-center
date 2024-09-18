@@ -1,10 +1,10 @@
+import { DEFAULT_AVATAR } from '@/common/constants';
+import { searchUsers } from '@/services/ant-design-pro/api';
 import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable, TableDropdown } from '@ant-design/pro-components';
-import {Button, Dropdown, Image} from 'antd';
+import { Button, Dropdown, Image } from 'antd';
 import { useRef } from 'react';
-import {searchUsers} from "@/services/ant-design-pro/api";
-import {DEFAULT_AVATAR} from "@/common/constants";
 
 const columns: ProColumns<API.CurrentUser>[] = [
   {
@@ -29,19 +29,19 @@ const columns: ProColumns<API.CurrentUser>[] = [
     title: 'Avatar',
     dataIndex: 'avatarUrl',
     render: (_, record) => {
-      return <Image src={record.avatarUrl} fallback={DEFAULT_AVATAR} width={50} height={50} />
+      return <Image src={record.avatarUrl} fallback={DEFAULT_AVATAR} width={50} height={50} />;
     },
     ellipsis: true,
-    search: false
+    search: false,
   },
   {
     title: 'Gender',
     dataIndex: 'gender',
     ellipsis: true,
     valueEnum: {
-      0: {text: 'Female'},
-      1: {text: 'Male'}
-    }
+      0: { text: 'Female' },
+      1: { text: 'Male' },
+    },
   },
   {
     title: 'Phone',
@@ -60,24 +60,24 @@ const columns: ProColumns<API.CurrentUser>[] = [
     dataIndex: 'userStatus',
     ellipsis: true,
     valueEnum: {
-      0: {text: 'Active', status: 'Success'},
-      1: {text: 'Deactivate', status: 'Default'}
-    }
+      0: { text: 'Active', status: 'Success' },
+      1: { text: 'Deactivate', status: 'Default' },
+    },
   },
   {
     title: 'Role',
     dataIndex: 'userRole',
     ellipsis: true,
     valueEnum: {
-      0: {text: 'User', status: 'Default'},
-      1: {text: 'Admin', status: 'Success'}
-    }
+      0: { text: 'User', status: 'Default' },
+      1: { text: 'Admin', status: 'Success' },
+    },
   },
   {
     title: 'Create Time',
     dataIndex: 'createTime',
     valueType: 'dateTime',
-    search: false
+    search: false,
   },
   {
     title: 'Operations',
@@ -117,8 +117,8 @@ const UserManageTable = () => {
       request={async (params, sort, filter) => {
         const userList = await searchUsers(params);
         return {
-          data: userList
-        }
+          data: userList,
+        };
       }}
       editable={{
         type: 'multiple',

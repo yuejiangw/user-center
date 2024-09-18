@@ -1,15 +1,15 @@
-import {Footer} from '@/components';
-import {Helmet} from '@umijs/max';
+import { useAuthStyles } from '@/common/styles';
+import { Footer } from '@/components';
+import { Helmet } from '@umijs/max';
 import React from 'react';
 import Settings from '../../../../config/defaultSettings';
-import {useAuthStyles} from "@/common/styles";
-import UserManageTable from './UserManageTable'
+import UserManageTable from './UserManageTable';
 
 const UserManage: React.FC = () => {
-  const {styles} = useAuthStyles();
+  const { styles } = useAuthStyles();
 
   return (
-    <div id='usermanage' className={styles.container}>
+    <div id="usermanage" className={styles.container}>
       <Helmet>
         <title>
           {'Register'}- {Settings.title}
@@ -23,7 +23,7 @@ const UserManage: React.FC = () => {
       >
         <UserManageTable />
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

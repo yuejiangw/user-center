@@ -1,6 +1,6 @@
-import {createStyles} from "antd-style";
+import { createStyles } from 'antd-style';
 
-export const useAuthStyles = createStyles(({token}) => {
+export const useAuthStyles = createStyles(({ token }) => {
   return {
     action: {
       marginLeft: '8px',

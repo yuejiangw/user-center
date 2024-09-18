@@ -1,18 +1,17 @@
-import {AvatarDropdown, AvatarName, Footer, Question} from '@/components';
-import {currentUser as queryCurrentUser} from '@/services/ant-design-pro/api';
-import {LinkOutlined} from '@ant-design/icons';
-import type {Settings as LayoutSettings} from '@ant-design/pro-components';
-import {SettingDrawer} from '@ant-design/pro-components';
-import type {RunTimeLayoutConfig} from '@umijs/max';
-import {history, Link} from '@umijs/max';
+import { DEFAULT_AVATAR } from '@/common/constants';
+import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
+import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
+import { LinkOutlined } from '@ant-design/icons';
+import type { Settings as LayoutSettings } from '@ant-design/pro-components';
+import { SettingDrawer } from '@ant-design/pro-components';
+import type { RunTimeLayoutConfig } from '@umijs/max';
+import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
-import {errorConfig} from './requestErrorConfig';
-import {DEFAULT_AVATAR} from "@/common/constants";
+import { errorConfig } from './requestErrorConfig';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const NO_LOGIN_WHITE_LIST = [loginPath, '/user/register'];
-
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -26,7 +25,7 @@ export async function getInitialState(): Promise<{
   // alert(process.env.NODE_ENV);
   const fetchUserInfo = async () => {
     try {
-      const user  = await queryCurrentUser();
+      const user = await queryCurrentUser();
       console.log(`Get current username: ${user.username}, user avatar: ${user.avatarUrl}`);
       return user;
     } catch (error) {

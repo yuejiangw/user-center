@@ -1,13 +1,12 @@
-import React from 'react';
-import {Avatar, message} from "antd";
-import {ProForm, ProFormDatePicker} from "@ant-design/pro-form";
-import {FooterToolbar, ProFormSelect, ProFormText} from "@ant-design/pro-components";
-import {useModel} from "@@/exports";
-import {flushSync} from "react-dom";
-import {updateUser} from "@/services/ant-design-pro/api";
+import { updateUser } from '@/services/ant-design-pro/api';
+import { useModel } from '@@/exports';
+import { FooterToolbar, ProFormSelect, ProFormText } from '@ant-design/pro-components';
+import { ProForm, ProFormDatePicker } from '@ant-design/pro-form';
+import { Avatar, message } from 'antd';
+import { flushSync } from 'react-dom';
 
 const UserProfileForm = () => {
-  const {initialState, setInitialState} = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel('@@initialState');
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -45,22 +44,14 @@ const UserProfileForm = () => {
         onFinish={handleSubmit}
       >
         <ProForm.Group>
-          <ProFormText
-            name="id"
-            label="用户 ID"
-            disabled
-          />
+          <ProFormText name="id" label="用户 ID" disabled />
           <ProFormText
             name="username"
             label="用户名"
             placeholder="请输入用户名"
             rules={[{ required: true, message: '用户名是必填项' }]}
           />
-          <ProFormText
-            name="userAccount"
-            label="用户账号"
-            disabled
-          />
+          <ProFormText name="userAccount" label="用户账号" disabled />
         </ProForm.Group>
         <ProForm.Group>
           <ProFormText
@@ -69,11 +60,7 @@ const UserProfileForm = () => {
             placeholder="请输入邮箱"
             rules={[{ type: 'email', message: '请输入有效的邮箱地址' }]}
           />
-          <ProFormText
-            name="phone"
-            label="手机号"
-            placeholder="请输入手机号"
-          />
+          <ProFormText name="phone" label="手机号" placeholder="请输入手机号" />
           <ProFormSelect
             name="gender"
             label="性别"
@@ -84,11 +71,7 @@ const UserProfileForm = () => {
           />
         </ProForm.Group>
         <ProForm.Group>
-          <ProFormDatePicker
-            name="createTime"
-            label="注册时间"
-            disabled
-          />
+          <ProFormDatePicker name="createTime" label="注册时间" disabled />
           <ProFormSelect
             name="userStatus"
             label="用户状态"

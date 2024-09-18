@@ -23,7 +23,7 @@ declare namespace API {
 
   type RegisterResult = {
     id: number;
-  }
+  };
 
   type PageParams = {
     current?: number;
@@ -79,14 +79,14 @@ declare namespace API {
     gender?: number;
     phone?: stirng;
     email?: string;
-  }
+  };
 
   type BaseResponse<T> = {
-    code: number,
-    data: T,
-    message: string,
-    description: string
-  }
+    code: number;
+    data: T;
+    message: string;
+    description: string;
+  };
 
   type ErrorResponse = {
     /** 业务约定的错误码 */

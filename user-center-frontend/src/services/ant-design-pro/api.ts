@@ -2,8 +2,7 @@
 /* eslint-disable */
 
 // import { request } from '@umijs/max';
-import {request} from '@/interceptors/responseInterceptor';
-
+import { request } from '@/interceptors/responseInterceptor';
 
 /** 获取当前的用户 GET /api/user/current */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -47,7 +46,10 @@ export async function register(body: API.RegisterParams, options?: { [key: strin
 }
 
 /** 搜索用户 GET /api/user/search */
-export async function searchUsers(params?: { [key: string]: any }, options?: { [key: string]: any }) {
+export async function searchUsers(
+  params?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
   return request<API.BaseResponse<API.CurrentUser[]>>('/api/user/search', {
     method: 'GET',
     params: params,
@@ -59,23 +61,26 @@ export async function searchUsers(params?: { [key: string]: any }, options?: { [
 export async function updateUser(body: API.UpdateParams, options?: { [key: string]: any }) {
   return request<API.BaseResponse<boolean>>('/api/user/update', {
     method: 'POST',
-      headers: {
+    headers: {
       'Content-Type': 'application/json',
     },
     data: body,
-  ...(options || {}),
+    ...(options || {}),
   });
 }
 
 /** 创建用户 POST /api/user/create?userAccount=? */
-export async function createUser(params: {userAccount: string}, options?: { [key: string]: any }) {
+export async function createUser(
+  params: { userAccount: string },
+  options?: { [key: string]: any },
+) {
   return request<API.BaseResponse<number>>('/api/user/update', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     params: {
-      ...params
+      ...params,
     },
     ...(options || {}),
   });
@@ -113,10 +118,10 @@ export async function rule(
 export async function updateRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'update',
       ...(options || {}),
-    }
+    },
   });
 }
 
@@ -124,10 +129,10 @@ export async function updateRule(options?: { [key: string]: any }) {
 export async function addRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'post',
       ...(options || {}),
-    }
+    },
   });
 }
 
@@ -135,9 +140,9 @@ export async function addRule(options?: { [key: string]: any }) {
 export async function removeRule(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'delete',
       ...(options || {}),
-    }
+    },
   });
 }
