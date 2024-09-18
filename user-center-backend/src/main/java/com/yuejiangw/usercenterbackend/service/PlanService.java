@@ -20,4 +20,6 @@ public interface PlanService extends IService<Plan> {
     List<Plan> searchPlan(Map<String, String> queryParams, HttpServletRequest request);
 
     Boolean deletePlan(final Long planId, HttpServletRequest request);
+
+    Boolean updatePlan(final Plan plan);
 }

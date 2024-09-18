@@ -126,4 +126,9 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan>
         log.info("Delete {} plans", rows);
         return true;
     }
+
+    @Override
+    public Boolean updatePlan(Plan plan) {
+        return planMapper.updateById(plan) > 0;
+    }
 }

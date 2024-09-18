@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class PlanCreateRequest implements Serializable {
+public class PlanUpdateRequest implements Serializable {
+    private Long id;
+
     private String name;
 
     private String courseDirection;

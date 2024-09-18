@@ -3,6 +3,7 @@ package com.yuejiangw.usercenterbackend.controller;
 import com.yuejiangw.usercenterbackend.common.BaseResponse;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
 import com.yuejiangw.usercenterbackend.common.ResponseUtils;
+import com.yuejiangw.usercenterbackend.common.UserUtils;
 import com.yuejiangw.usercenterbackend.exception.CustomException;
 import com.yuejiangw.usercenterbackend.model.domain.User;
 import com.yuejiangw.usercenterbackend.model.request.UserLoginRequest;
@@ -15,10 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.yuejiangw.usercenterbackend.common.UserUtils.getCurrentUser;
 
 @Slf4j
 @RestController
@@ -47,10 +48,8 @@ public class UserController {
 
     @GetMapping("/current")
     public BaseResponse<User> currentUser(final HttpServletRequest request) {
-        User currentUser = getCurrentUser(request);
-        if (currentUser == null) {
-            throw new CustomException(ErrorCode.NOT_LOGIN);
-        }
+        User currentUser = UserUtils.getCurrentUser(request);
+
         // 尽管已经获取了登录信息但还是建议从数据库中取数据，因为用户信息可能会变化但 session 中的信息不一定会变，以数据库为准
         long userId = currentUser.getId();
         // TODO 校验用户是否合法
@@ -113,6 +112,7 @@ public class UserController {
                 .userPassword(request.getUserPassword())
                 .phone(request.getPhone())
                 .email(request.getEmail())
+                .updateTime(new Date())
                 .build();
 
         return ResponseUtils.success(userService.updateUser(user));

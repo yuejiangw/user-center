@@ -1,15 +1,19 @@
 package com.yuejiangw.usercenterbackend.controller;
 
 import com.yuejiangw.usercenterbackend.common.BaseResponse;
+import com.yuejiangw.usercenterbackend.common.ErrorCode;
 import com.yuejiangw.usercenterbackend.common.ResponseUtils;
+import com.yuejiangw.usercenterbackend.exception.CustomException;
 import com.yuejiangw.usercenterbackend.model.domain.Plan;
 import com.yuejiangw.usercenterbackend.model.request.PlanCreateRequest;
+import com.yuejiangw.usercenterbackend.model.request.PlanUpdateRequest;
 import com.yuejiangw.usercenterbackend.service.PlanService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +50,26 @@ public class PlanController {
     }
 
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteUser(@RequestParam final long id, final HttpServletRequest request) {
+    public BaseResponse<Boolean> deletePlan(@RequestParam final long id, final HttpServletRequest request) {
         return ResponseUtils.success(planService.deletePlan(id, request));
+    }
+
+    @PostMapping("/update")
+    public BaseResponse<Boolean> updatePlan(@RequestBody final PlanUpdateRequest planUpdateRequest) {
+        if (planUpdateRequest == null) {
+            throw new CustomException(ErrorCode.PARAMS_ERROR);
+        }
+
+        final Plan plan = Plan.builder()
+                .id(planUpdateRequest.getId())
+                .name(planUpdateRequest.getName())
+                .courseDirection(planUpdateRequest.getCourseDirection())
+                .subDirection(planUpdateRequest.getSubDirection())
+                .courseTarget(planUpdateRequest.getCourseTarget())
+                .courseDetail(planUpdateRequest.getCourseDetail())
+                .updateTime(new Date())
+                .build();
+
+        return ResponseUtils.success(planService.updatePlan(plan));
     }
 }
