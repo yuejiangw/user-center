@@ -14,14 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.yuejiangw.usercenterbackend.common.UserConstant.*;
+import static com.yuejiangw.usercenterbackend.common.UserUtils.isAdmin;
+import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.*;
 
 
 /**
@@ -75,11 +74,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
 
         // 3. 插入数据
-        User user = new User();
-        // By default, the user's init username will be the same as the user account
-        user.setUsername(userAccount);
-        user.setUserAccount(userAccount);
-        user.setUserPassword(encryptPassword);
+        final User user = User.builder()
+                .username(userAccount)  // By default, the user's init username will be the same as the user account
+                .userAccount(userAccount)
+                .userPassword(encryptPassword)
+                .build();
+
         boolean saveResult = this.save(user);
         if (!saveResult) {
             throw new CustomException(ErrorCode.SYSTEM_ERROR, "User can not be created");
@@ -140,10 +140,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryParams.forEach((key, value) -> {
-            if (EXACT_MATCH.contains(key)) {
+            if (USER_EXACT_MATCH.contains(key)) {
                 queryWrapper.eq(key, value);
             }
-            if (PATTERN_MATCH.contains(key)) {
+            if (USER_PATTERN_MATCH.contains(key)) {
                 queryWrapper.like(key, value);
             }
         });
@@ -159,7 +159,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new CustomException(ErrorCode.NO_AUTH, "Only Admin can delete a user");
         }
 
-        int rows = userMapper.deleteById(id);
+        final int rows = userMapper.deleteById(id);
         log.info("Delete {} rows", rows);
         return true;
     }
@@ -190,19 +190,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return null;
         }
 
-        User safetyUser = new User();
-        safetyUser.setId(user.getId());
-        safetyUser.setUsername(user.getUsername());
-        safetyUser.setUserAccount(user.getUserAccount());
-        safetyUser.setAvatarUrl(user.getAvatarUrl());
-        safetyUser.setGender(user.getGender());
-        safetyUser.setPhone(user.getPhone());
-        safetyUser.setEmail(user.getEmail());
-        safetyUser.setUserStatus(user.getUserStatus());
-        safetyUser.setCreateTime(user.getCreateTime());
-        safetyUser.setUserRole(user.getUserRole());
-
-        return safetyUser;
+        return User.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .userAccount(user.getUserAccount())
+                .avatarUrl(user.getAvatarUrl())
+                .gender(user.getGender())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .userStatus(user.getUserStatus())
+                .createTime(user.getCreateTime())
+                .userRole(user.getUserRole())
+                .build();
     }
 
     /**
@@ -218,11 +217,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         } catch (Exception e) {
             return 0;
         }
-    }
-
-    private boolean isAdmin(HttpServletRequest request) {
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        User user = (User) userObj;
-        return user != null && user.getUserRole() == ADMIN_ROLE;
     }
 }

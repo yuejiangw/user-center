@@ -1,4 +1,4 @@
-package com.yuejiangw.usercenterbackend.common;
+package com.yuejiangw.usercenterbackend.common.constants;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public interface UserConstant {
 
     String USER_ROLE = "userRole";
 
-    List<String> EXACT_MATCH = List.of(ID, GENDER, USER_ROLE);
+    List<String> USER_EXACT_MATCH = List.of(ID, GENDER, USER_ROLE);
 
-    List<String> PATTERN_MATCH = List.of(USERNAME, USER_ACCOUNT, PHONE, EMAIL);
+    List<String> USER_PATTERN_MATCH = List.of(USERNAME, USER_ACCOUNT, PHONE, EMAIL);
 }

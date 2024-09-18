@@ -1,7 +1,7 @@
 package com.yuejiangw.usercenterbackend.common;
 
-import static com.yuejiangw.usercenterbackend.common.UserConstant.CODE_OK;
-import static com.yuejiangw.usercenterbackend.common.UserConstant.MESSAGE_OK;
+import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.CODE_OK;
+import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.MESSAGE_OK;
 
 public class ResponseUtils {
 

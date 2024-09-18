@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.yuejiangw.usercenterbackend.common.UserConstant.*;
+import static com.yuejiangw.usercenterbackend.common.UserUtils.getCurrentUser;
 
 @Slf4j
 @RestController
@@ -46,9 +46,8 @@ public class UserController {
     }
 
     @GetMapping("/current")
-    public BaseResponse<User> getCurrentUser(final HttpServletRequest request) {
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        User currentUser = (User) userObj;
+    public BaseResponse<User> currentUser(final HttpServletRequest request) {
+        User currentUser = getCurrentUser(request);
         if (currentUser == null) {
             throw new CustomException(ErrorCode.NOT_LOGIN);
         }
