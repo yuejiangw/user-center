@@ -6,6 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.yuejiangw.usercenterbackend.model.domain.Plan">
             <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="creatorId" column="creatorId" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="courseDirection" column="courseDirection" jdbcType="VARCHAR"/>
             <result property="subDirection" column="subDirection" jdbcType="VARCHAR"/>
@@ -19,7 +20,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,courseDirection,
+        id,creatorId,name,courseDirection,
         subDirection,courseTarget,courseDetail,
         comment,isDelete,createTime,
         updateTime,isPublished

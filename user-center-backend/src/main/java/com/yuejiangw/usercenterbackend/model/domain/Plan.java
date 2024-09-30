@@ -20,13 +20,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class Plan implements Serializable {
     /**
      * 计划 id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 创造者 id
+     */
+    @TableField(value = "creatorId")
+    private Long creatorId;
 
     /**
      * 计划名称

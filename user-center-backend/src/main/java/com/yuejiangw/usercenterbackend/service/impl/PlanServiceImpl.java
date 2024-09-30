@@ -39,24 +39,15 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
     private TeachMapper teachMapper;
 
     @Override
-    @Transactional  // 开启事务，两个插入操作要么都成功要么回滚
     public void createPlan(Plan plan, HttpServletRequest request) {
         final User currentUser = UserUtils.getCurrentUser(request);
 
-        // build a Teach object
-        final Teach teach = Teach.builder()
-                .userId(currentUser.getId())
-                .planId(plan.getId())
-                .build();
+        final Plan finalPlan = plan.toBuilder().creatorId(currentUser.getId()).build();
 
-        // 创建计划之后要同时更新 teach 表和 plan 表
-        int p = planMapper.insert(plan);
-        int t = teachMapper.insert(teach);
+        int p = planMapper.insert(finalPlan);
 
         if (p <= 0) {
             throw new CustomException(ErrorCode.SYSTEM_ERROR, "Plan can not be created");
-        } else if (t <= 0) {
-            throw new CustomException(ErrorCode.SYSTEM_ERROR, "Plan was created but unable to stored in teach table");
         }
     }
 
@@ -72,12 +63,8 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
             throw new CustomException(ErrorCode.PARAMS_ERROR, "Get plan failed, plan ID doesn't exist");
         }
 
-        final QueryWrapper<Teach> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("planId", planId);
-        final Teach teach = teachMapper.selectOne(queryWrapper);
-
         // If you are not admin, you can only view the plans created by yourself
-        if (!isAdmin && !Objects.equals(teach.getUserId(), user.getId())) {
+        if (!isAdmin && !Objects.equals(plan.getCreatorId(), user.getId())) {
             throw new CustomException(ErrorCode.NO_AUTH, "Get plan failed, you don't have permission to view others' plans");
         }
 
@@ -92,7 +79,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
         // 如果不是 admin，则只允许查询自己创建的 plan
         final boolean isAdmin = UserUtils.isAdmin(request);
         if (!isAdmin) {
-            queryWrapper.inSql("id", "SELECT planId FROM teach WHERE userId = " + user.getId());
+            queryWrapper.eq("creatorId", user.getId());
         }
 
         queryParams.forEach((key, value) -> {
@@ -110,14 +97,11 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
     @Override
     public Boolean deletePlan(Long planId, HttpServletRequest request) {
         final User user = UserUtils.getCurrentUser(request);
-
-        final QueryWrapper<Teach> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("planId", planId);
-        final Teach teach = teachMapper.selectOne(queryWrapper);
+        final Plan planToDelete = planMapper.selectById(planId);
 
         // 如果不是 admin，则只允许删除自己创建的 plan
         final boolean isAdmin = UserUtils.isAdmin(request);
-        if (!isAdmin && !Objects.equals(teach.getUserId(), user.getId())) {
+        if (!isAdmin && !Objects.equals(planToDelete.getCreatorId(), user.getId())) {
             throw new CustomException(ErrorCode.NO_AUTH, "Get plan failed, you don't have permission to delete others' plans");
         }
 
