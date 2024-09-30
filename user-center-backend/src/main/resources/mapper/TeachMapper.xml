@@ -6,7 +6,8 @@
 
     <resultMap id="BaseResultMap" type="com.yuejiangw.usercenterbackend.model.domain.Teach">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="studentId" column="studentId" jdbcType="BIGINT"/>
+            <result property="teacherId" column="teacherId" jdbcType="BIGINT"/>
             <result property="planId" column="planId" jdbcType="BIGINT"/>
             <result property="isPublished" column="isPublished" jdbcType="TINYINT"/>
             <result property="isDelete" column="isDelete" jdbcType="INTEGER"/>
@@ -15,8 +16,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,userId,planId,
-        isPublished,isDelete,createTime,
-        updateTime
+        id,studentId,teacherId,
+        planId,isPublished,isDelete,
+        createTime,updateTime
     </sql>
 </mapper>

@@ -23,16 +23,22 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Teach implements Serializable {
     /**
-     * 
+     *
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 用户 id
+     * 学生 id
      */
-    @TableField(value = "userId")
-    private Long userId;
+    @TableField(value = "studentId")
+    private Long studentId;
+
+    /**
+     * 老师 id
+     */
+    @TableField(value = "teacherId")
+    private Long teacherId;
 
     /**
      * 教学计划 id

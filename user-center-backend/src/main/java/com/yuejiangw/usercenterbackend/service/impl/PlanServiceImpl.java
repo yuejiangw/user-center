@@ -31,8 +31,7 @@ import static com.yuejiangw.usercenterbackend.common.constants.PlanConstant.PLAN
 */
 @Service
 @Slf4j
-public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan>
-    implements PlanService{
+public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements PlanService{
     @Resource
     private PlanMapper planMapper;
 

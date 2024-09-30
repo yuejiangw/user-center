@@ -82,6 +82,12 @@ public class Plan implements Serializable {
     @TableField(value = "updateTime")
     private Date updateTime;
 
+    /**
+     * 是否发布，0 - 未发布，1 - 已发布
+     */
+    @TableField(value = "isPublished")
+    private Integer isPublished;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
