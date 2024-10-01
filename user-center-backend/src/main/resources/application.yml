@@ -7,7 +7,7 @@ spring:
     username: root
     password: 123456  # update it to your own password
   session:
-    timeout: 86400  # session 失效时间
+    timeout: 86400  # session 失效时间，为 24h
 server:
   port: 8080
 mybatis-plus:
