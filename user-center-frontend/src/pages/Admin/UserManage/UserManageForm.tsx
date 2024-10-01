@@ -1,9 +1,9 @@
 import {DEFAULT_AVATAR} from '@/common/constants';
 import {deleteUser, searchUsers, updateUser} from '@/services/ant-design-pro/api';
-import {EllipsisOutlined, PlusOutlined} from '@ant-design/icons';
-import type {ActionType, ProColumns, ProCoreActionType} from '@ant-design/pro-components';
+import {PlusOutlined} from '@ant-design/icons';
+import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {ProTable, TableDropdown} from '@ant-design/pro-components';
-import {Button, Dropdown, Image, message} from 'antd';
+import {Button, Image, message, Popconfirm} from 'antd';
 import React, {useRef, useState} from 'react';
 import {Footer} from "@/components";
 import UserProfileModal from "@/pages/Admin/UserManage/UserProfileModal";
@@ -33,18 +33,8 @@ const UserManageTable = () => {
     setIsCreateUserModalOpen(false);
   }
 
-  const handleMenuSelect = (key: string, record: API.CurrentUser, action: ProCoreActionType) => {
-    if (key === 'delete') {
-      deleteUser({id: record.id})
-        .then(r => {
-          if (r > 0) {
-            message.success(`Deleted user ${record.username}`);
-          } else {
-            message.error(`Fail to delete user ${record.username}`);
-          }
-        })
-        .finally(action.reload);
-    } else if (key === 'copy') {
+  const handleMenuSelect = (key: string, record: API.CurrentUser) => {
+    if (key === 'copy') {
       // 处理复制逻辑
       navigator.clipboard.writeText(JSON.stringify(record));
       message.success('User information copied to clipboard!');
@@ -143,10 +133,30 @@ const UserManageTable = () => {
         </a>,
         <TableDropdown
           key="actionGroup"
-          onSelect={(key: string) => handleMenuSelect(key, record, action)}
+          onSelect={(key: string) => handleMenuSelect(key, record)}
           menus={[
             {key: 'copy', name: 'Copy'},
-            {key: 'delete', name: 'Delete'},
+            {
+              key: 'delete',
+              name: (
+                <Popconfirm
+                  title="Are you sure to delete this user?"
+                  onConfirm={async () => {
+                    const success = await deleteUser({id: record.id}); // 假设这是你的删除用户的 API
+                    if (success) {
+                      message.success('用户删除成功');
+                      action?.reload(); // 刷新表格数据
+                    } else {
+                      message.error('删除失败，请重试');
+                    }
+                  }}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <span style={{cursor: 'pointer', color: 'red'}}>Delete</span>
+                </Popconfirm>
+              )
+            },
           ]}
         />,
       ],
@@ -222,29 +232,6 @@ const UserManageTable = () => {
           >
             新建
           </Button>,
-          <Dropdown
-            key="menu"
-            menu={{
-              items: [
-                {
-                  label: '1st item',
-                  key: '1',
-                },
-                {
-                  label: '2nd item',
-                  key: '2',
-                },
-                {
-                  label: '3rd item',
-                  key: '3',
-                },
-              ],
-            }}
-          >
-            <Button>
-              <EllipsisOutlined/>
-            </Button>
-          </Dropdown>,
         ]}
       />
       <UserProfileModal
