@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 // import { request } from '@umijs/max';
-import { request } from '@/interceptors/responseInterceptor';
+import {request} from '@/interceptors/responseInterceptor';
 
 /** 获取当前的用户 GET /api/user/current */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -69,12 +69,29 @@ export async function updateUser(body: API.UpdateParams, options?: { [key: strin
   });
 }
 
-/** 创建用户 POST /api/user/create?userAccount=? */
+/** 创建用户 POST /api/user/create?userAccount=* */
 export async function createUser(
-  params: { userAccount: string },
+  params: { userAccount: string, userRole: number },
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponse<number>>('/api/user/update', {
+  return request<API.BaseResponse<number>>('/api/user/create', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 删除用户 POST /api/user/delete?id=* */
+export async function deleteUser(
+  params: { id: number },
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponse<number>>('/api/user/delete', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
