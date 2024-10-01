@@ -1,5 +1,5 @@
 import {DEFAULT_AVATAR} from '@/common/constants';
-import {deleteUser, searchUsers} from '@/services/ant-design-pro/api';
+import {deleteUser, searchUsers, updateUser} from '@/services/ant-design-pro/api';
 import {EllipsisOutlined, PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns, ProCoreActionType} from '@ant-design/pro-components';
 import {ProTable, TableDropdown} from '@ant-design/pro-components';
@@ -35,10 +35,15 @@ const UserManageTable = () => {
 
   const handleMenuSelect = (key: string, record: API.CurrentUser, action: ProCoreActionType) => {
     if (key === 'delete') {
-      deleteUser({id: record.id}).then(r => {
-        message.success(`Deleted user: ${record.username}`);
-        action.reload();
-      })
+      deleteUser({id: record.id})
+        .then(r => {
+          if (r > 0) {
+            message.success(`Deleted user ${record.username}`);
+          } else {
+            message.error(`Fail to delete user ${record.username}`);
+          }
+        })
+        .finally(action.reload);
     } else if (key === 'copy') {
       // 处理复制逻辑
       navigator.clipboard.writeText(JSON.stringify(record));
@@ -118,6 +123,7 @@ const UserManageTable = () => {
       dataIndex: 'createTime',
       valueType: 'dateTime',
       search: false,
+      editable: false
     },
     {
       title: 'Operations',
@@ -161,6 +167,14 @@ const UserManageTable = () => {
         }}
         editable={{
           type: 'multiple',
+          onSave: async (key, row) => {
+            await updateUser(row);
+            message.success(`Update user ${row.username} successful`)
+          },
+          onDelete: async (key, row) => {
+            await deleteUser({id: row.id});
+            message.success(`Delete user ${row.username} successful`)
+          }
         }}
         columnsState={{
           persistenceKey: 'pro-table-singe-demos',

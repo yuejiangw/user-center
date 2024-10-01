@@ -1,12 +1,13 @@
-import { updateUser } from '@/services/ant-design-pro/api';
-import { useModel } from '@@/exports';
-import { FooterToolbar, ProFormSelect, ProFormText } from '@ant-design/pro-components';
-import { ProForm, ProFormDatePicker } from '@ant-design/pro-form';
-import { Avatar, message } from 'antd';
-import { flushSync } from 'react-dom';
+import {updateUser} from '@/services/ant-design-pro/api';
+import {useModel} from '@@/exports';
+import {FooterToolbar, ProFormSelect, ProFormText} from '@ant-design/pro-components';
+import {ProForm, ProFormDatePicker} from '@ant-design/pro-form';
+import {Avatar, message} from 'antd';
+import {flushSync} from 'react-dom';
+import {DEFAULT_AVATAR} from "@/common/constants";
 
 const UserProfileForm = () => {
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const {initialState, setInitialState} = useModel('@@initialState');
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -32,8 +33,8 @@ const UserProfileForm = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-        <Avatar size={100} src={initialState!.currentUser!.avatarUrl} />
+      <div style={{display: 'flex', justifyContent: 'center', marginBottom: 24}}>
+        <Avatar size={100} src={initialState!.currentUser!.avatarUrl ?? DEFAULT_AVATAR}/>
       </div>
       <ProForm
         layout="vertical"
@@ -44,40 +45,40 @@ const UserProfileForm = () => {
         onFinish={handleSubmit}
       >
         <ProForm.Group>
-          <ProFormText name="id" label="用户 ID" disabled />
+          <ProFormText name="id" label="用户 ID" disabled/>
           <ProFormText
             name="username"
             label="用户名"
             placeholder="请输入用户名"
-            rules={[{ required: true, message: '用户名是必填项' }]}
+            rules={[{required: true, message: '用户名是必填项'}]}
           />
-          <ProFormText name="userAccount" label="用户账号" disabled />
+          <ProFormText name="userAccount" label="用户账号" disabled/>
         </ProForm.Group>
         <ProForm.Group>
           <ProFormText
             name="email"
             label="邮箱"
             placeholder="请输入邮箱"
-            rules={[{ type: 'email', message: '请输入有效的邮箱地址' }]}
+            rules={[{type: 'email', message: '请输入有效的邮箱地址'}]}
           />
-          <ProFormText name="phone" label="手机号" placeholder="请输入手机号" />
+          <ProFormText name="phone" label="手机号" placeholder="请输入手机号"/>
           <ProFormSelect
             name="gender"
             label="性别"
             options={[
-              { label: '男', value: 1 },
-              { label: '女', value: 2 },
+              {label: '男', value: 1},
+              {label: '女', value: 2},
             ]}
           />
         </ProForm.Group>
         <ProForm.Group>
-          <ProFormDatePicker name="createTime" label="注册时间" disabled />
+          <ProFormDatePicker name="createTime" label="注册时间" disabled/>
           <ProFormSelect
             name="userStatus"
             label="用户状态"
             options={[
-              { label: '正常', value: 0 },
-              { label: '禁用', value: 1 },
+              {label: '正常', value: 0},
+              {label: '禁用', value: 1},
             ]}
             disabled
           />
@@ -85,8 +86,8 @@ const UserProfileForm = () => {
             name="userRole"
             label="用户角色"
             options={[
-              { label: '普通用户', value: 0 },
-              { label: '管理员', value: 1 },
+              {label: '普通用户', value: 0},
+              {label: '管理员', value: 1},
             ]}
             disabled={true}
           />
