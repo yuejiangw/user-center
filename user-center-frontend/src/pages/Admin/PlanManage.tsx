@@ -1,86 +1,125 @@
-import { DEFAULT_AVATAR } from '@/common/constants';
-import { searchUsers } from '@/services/ant-design-pro/api';
 import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable, TableDropdown } from '@ant-design/pro-components';
-import { Button, Dropdown, Image } from 'antd';
+import { Button, Dropdown, Space, Tag } from 'antd';
 import { useRef } from 'react';
+import request from 'umi-request';
+export const waitTimePromise = async (time: number = 100) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
 
-const columns: ProColumns<API.CurrentUser>[] = [
+export const waitTime = async (time: number = 100) => {
+  await waitTimePromise(time);
+};
+
+type GithubIssueItem = {
+  url: string;
+  id: number;
+  number: number;
+  title: string;
+  labels: {
+    name: string;
+    color: string;
+  }[];
+  state: string;
+  comments: number;
+  created_at: string;
+  updated_at: string;
+  closed_at?: string;
+};
+
+const columns: ProColumns<GithubIssueItem>[] = [
   {
-    dataIndex: 'id',
+    dataIndex: 'index',
     valueType: 'indexBorder',
     width: 48,
   },
   {
-    title: 'Username',
-    dataIndex: 'username',
+    title: '标题',
+    dataIndex: 'title',
     copyable: true,
     ellipsis: true,
-    tooltip: 'tooltip example, will ellipsis automatically if the title is too long',
-  },
-  {
-    title: 'Account',
-    dataIndex: 'userAccount',
-    copyable: true,
-    ellipsis: true,
-  },
-  {
-    title: 'Avatar',
-    dataIndex: 'avatarUrl',
-    render: (_, record) => {
-      return <Image src={record.avatarUrl} fallback={DEFAULT_AVATAR} width={50} height={50} />;
+    tooltip: '标题过长会自动收缩',
+    formItemProps: {
+      rules: [
+        {
+          required: true,
+          message: '此项为必填项',
+        },
+      ],
     },
+  },
+  {
+    disable: true,
+    title: '状态',
+    dataIndex: 'state',
+    filters: true,
+    onFilter: true,
     ellipsis: true,
+    valueType: 'select',
+    valueEnum: {
+      all: { text: '超长'.repeat(50) },
+      open: {
+        text: '未解决',
+        status: 'Error',
+      },
+      closed: {
+        text: '已解决',
+        status: 'Success',
+        disabled: true,
+      },
+      processing: {
+        text: '解决中',
+        status: 'Processing',
+      },
+    },
+  },
+  {
+    disable: true,
+    title: '标签',
+    dataIndex: 'labels',
     search: false,
+    renderFormItem: (_, { defaultRender }) => {
+      return defaultRender(_);
+    },
+    render: (_, record) => (
+      <Space>
+        {record.labels.map(({ name, color }) => (
+          <Tag color={color} key={name}>
+            {name}
+          </Tag>
+        ))}
+      </Space>
+    ),
   },
   {
-    title: 'Gender',
-    dataIndex: 'gender',
-    ellipsis: true,
-    valueEnum: {
-      0: { text: 'Female' },
-      1: { text: 'Male' },
+    title: '创建时间',
+    key: 'showTime',
+    dataIndex: 'created_at',
+    valueType: 'date',
+    sorter: true,
+    hideInSearch: true,
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'created_at',
+    valueType: 'dateRange',
+    hideInTable: true,
+    search: {
+      transform: (value) => {
+        return {
+          startTime: value[0],
+          endTime: value[1],
+        };
+      },
     },
   },
   {
-    title: 'Phone',
-    dataIndex: 'phone',
-    copyable: true,
-    ellipsis: true,
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    copyable: true,
-    ellipsis: true,
-  },
-  {
-    title: 'Status',
-    dataIndex: 'userStatus',
-    ellipsis: true,
-    valueEnum: {
-      0: { text: 'Active', status: 'Success' },
-      1: { text: 'Deactivate', status: 'Default' },
-    },
-  },
-  {
-    title: 'Role',
-    dataIndex: 'userRole',
-    ellipsis: true,
-    valueEnum: {
-      0: { text: 'User', status: 'Default' },
-      1: { text: 'Admin', status: 'Success' },
-    },
-  },
-  {
-    title: 'Create Time',
-    dataIndex: 'createTime',
-    valueType: 'dateTime',
-    search: false,
-  },
-  {
-    title: 'Operations',
+    title: '操作',
     valueType: 'option',
     key: 'option',
     render: (text, record, _, action) => [
@@ -90,35 +129,38 @@ const columns: ProColumns<API.CurrentUser>[] = [
           action?.startEditable?.(record.id);
         }}
       >
-        Edit
+        编辑
       </a>,
       <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
-        View
+        查看
       </a>,
       <TableDropdown
         key="actionGroup"
         onSelect={() => action?.reload()}
         menus={[
-          { key: 'copy', name: 'Copy' },
-          { key: 'delete', name: 'Delete' },
+          { key: 'copy', name: '复制' },
+          { key: 'delete', name: '删除' },
         ]}
       />,
     ],
   },
 ];
 
-const UserManageTable = () => {
+const PlanManage = () => {
   const actionRef = useRef<ActionType>();
   return (
-    <ProTable<API.CurrentUser>
+    <ProTable<GithubIssueItem>
       columns={columns}
       actionRef={actionRef}
       cardBordered
       request={async (params, sort, filter) => {
-        const userList = await searchUsers(params);
-        return {
-          data: userList,
-        };
+        console.log(sort, filter);
+        await waitTime(2000);
+        return request<{
+          data: GithubIssueItem[];
+        }>('https://proapi.azurewebsites.net/github/issues', {
+          params,
+        });
       }}
       editable={{
         type: 'multiple',
@@ -159,7 +201,7 @@ const UserManageTable = () => {
         onChange: (page) => console.log(page),
       }}
       dateFormatter="string"
-      headerTitle="Users"
+      headerTitle="高级表格"
       toolBarRender={() => [
         <Button
           key="button"
@@ -199,4 +241,4 @@ const UserManageTable = () => {
   );
 };
 
-export default UserManageTable;
+export default PlanManage;
