@@ -23,6 +23,8 @@ public interface UserService extends IService<User> {
      */
     long userRegister(String userAccount, String userPassword, String checkPassword);
 
+    long userRegister(String userAccount, String userPassword, String checkPassword, Integer userRole);
+
     /**
      * 用户登录
      * @param userAccount 账号
@@ -36,7 +38,7 @@ public interface UserService extends IService<User> {
 
     boolean deleteUser(final long id, HttpServletRequest request);
 
-    Long createUser(String userAccount, HttpServletRequest request);
+    Long createUser(String userAccount, Integer userRole, HttpServletRequest request);
 
     boolean updateUser(User user);
 

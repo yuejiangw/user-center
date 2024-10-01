@@ -39,6 +39,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
+        return userRegister(userAccount, userPassword, checkPassword, null);
+    }
+
+    @Override
+    public long userRegister(String userAccount, String userPassword, String checkPassword, Integer userRole) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
             throw new CustomException(ErrorCode.PARAMS_ERROR, "userAccount, userPassword, checkPassword can not be null");
@@ -74,11 +79,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
 
         // 3. 插入数据
-        final User user = User.builder()
+        final User.UserBuilder userBuilder = User.builder()
                 .username(userAccount)  // By default, the user's init username will be the same as the user account
                 .userAccount(userAccount)
-                .userPassword(encryptPassword)
-                .build();
+                .userPassword(encryptPassword);
+
+        if (userRole != null) {
+            userBuilder.userRole(userRole);
+        }
+
+        final User user = userBuilder.build();
 
         boolean saveResult = this.save(user);
         if (!saveResult) {
@@ -165,12 +175,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Long createUser(String userAccount, HttpServletRequest request) {
+    public Long createUser(String userAccount, Integer userRole, HttpServletRequest request) {
         if (!isAdmin(request)) {
             throw new CustomException(ErrorCode.NO_AUTH, "Only Admin can create a user, normal user please use Register API");
         }
 
-        return userRegister(userAccount, DEFAULT_PASSWORD, DEFAULT_PASSWORD);
+        return userRegister(userAccount, DEFAULT_PASSWORD, DEFAULT_PASSWORD, userRole);
     }
 
     @Override

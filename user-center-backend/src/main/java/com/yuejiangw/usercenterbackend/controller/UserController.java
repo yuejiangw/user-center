@@ -93,8 +93,8 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public BaseResponse<Long> createUser(@RequestParam final String userAccount, final HttpServletRequest request) {
-        return ResponseUtils.success(userService.createUser(userAccount, request));
+    public BaseResponse<Long> createUser(@RequestParam final String userAccount, @RequestParam final Integer userRole, final HttpServletRequest request) {
+        return ResponseUtils.success(userService.createUser(userAccount, userRole, request));
     }
 
     @PostMapping("/update")
