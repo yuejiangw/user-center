@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.yuejiangw.usercenterbackend.model.CourseStage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -61,14 +64,20 @@ public class Plan implements Serializable {
     /**
      * 课程安排
      */
-    @TableField(value = "courseDetail")
-    private Object courseDetail;
+    @TableField(typeHandler = JacksonTypeHandler.class, value = "courseDetail")
+    private List<CourseStage> courseDetail;
 
     /**
      * 备注
      */
     @TableField(value = "comment")
     private String comment;
+
+    /**
+     * 是否发布，0 - 未发布，1 - 已发布
+     */
+    @TableField(value = "isPublished")
+    private Integer isPublished;
 
     /**
      * 是否删除
@@ -87,12 +96,6 @@ public class Plan implements Serializable {
      */
     @TableField(value = "updateTime")
     private Date updateTime;
-
-    /**
-     * 是否发布，0 - 未发布，1 - 已发布
-     */
-    @TableField(value = "isPublished")
-    private Integer isPublished;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

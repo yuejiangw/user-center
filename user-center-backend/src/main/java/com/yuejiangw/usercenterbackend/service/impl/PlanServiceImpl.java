@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
 import com.yuejiangw.usercenterbackend.common.UserUtils;
 import com.yuejiangw.usercenterbackend.exception.CustomException;
-import com.yuejiangw.usercenterbackend.mapper.TeachMapper;
 import com.yuejiangw.usercenterbackend.model.domain.Plan;
-import com.yuejiangw.usercenterbackend.model.domain.Teach;
 import com.yuejiangw.usercenterbackend.model.domain.User;
 import com.yuejiangw.usercenterbackend.service.PlanService;
 import com.yuejiangw.usercenterbackend.mapper.PlanMapper;
@@ -15,7 +13,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -35,20 +32,16 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
     @Resource
     private PlanMapper planMapper;
 
-    @Resource
-    private TeachMapper teachMapper;
-
     @Override
     public void createPlan(Plan plan, HttpServletRequest request) {
-        final User currentUser = UserUtils.getCurrentUser(request);
-
-        final Plan finalPlan = plan.toBuilder().creatorId(currentUser.getId()).build();
-
-        int p = planMapper.insert(finalPlan);
-
-        if (p <= 0) {
-            throw new CustomException(ErrorCode.SYSTEM_ERROR, "Plan can not be created");
+        boolean saveResult = this.save(plan);
+        if (!saveResult) {
+            log.info("Plan can not be saved");
         }
+//        int p = planMapper.insert(plan);
+//        if (p <= 0) {
+//            throw new CustomException(ErrorCode.SYSTEM_ERROR, "Plan can not be created");
+//        }
     }
 
     @Override

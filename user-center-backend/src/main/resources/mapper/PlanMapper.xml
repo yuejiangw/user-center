@@ -11,7 +11,7 @@
             <result property="courseDirection" column="courseDirection" jdbcType="VARCHAR"/>
             <result property="subDirection" column="subDirection" jdbcType="VARCHAR"/>
             <result property="courseTarget" column="courseTarget" jdbcType="VARCHAR"/>
-            <result property="courseDetail" column="courseDetail" jdbcType="OTHER"/>
+            <result property="courseDetail" column="courseDetail" jdbcType="VARCHAR" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
             <result property="comment" column="comment" jdbcType="VARCHAR"/>
             <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
             <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>

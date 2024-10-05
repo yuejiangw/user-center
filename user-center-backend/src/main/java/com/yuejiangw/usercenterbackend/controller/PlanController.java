@@ -3,8 +3,10 @@ package com.yuejiangw.usercenterbackend.controller;
 import com.yuejiangw.usercenterbackend.common.BaseResponse;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
 import com.yuejiangw.usercenterbackend.common.ResponseUtils;
+import com.yuejiangw.usercenterbackend.common.UserUtils;
 import com.yuejiangw.usercenterbackend.exception.CustomException;
 import com.yuejiangw.usercenterbackend.model.domain.Plan;
+import com.yuejiangw.usercenterbackend.model.domain.User;
 import com.yuejiangw.usercenterbackend.model.request.PlanCreateRequest;
 import com.yuejiangw.usercenterbackend.model.request.PlanUpdateRequest;
 import com.yuejiangw.usercenterbackend.service.PlanService;
@@ -26,8 +28,11 @@ public class PlanController {
     private PlanService planService;
 
     @PostMapping("/create")
-    public void createPlan(@RequestBody final PlanCreateRequest planCreateRequest, HttpServletRequest httpServletRequest) {
+    public BaseResponse<Boolean> createPlan(@RequestBody final PlanCreateRequest planCreateRequest, HttpServletRequest httpServletRequest) {
+        final User currentUser = UserUtils.getCurrentUser(httpServletRequest);
+
         final Plan plan = Plan.builder()
+                .creatorId(currentUser.getId())
                 .name(planCreateRequest.getName())
                 .courseDirection(planCreateRequest.getCourseDirection())
                 .subDirection(planCreateRequest.getSubDirection())
@@ -36,7 +41,9 @@ public class PlanController {
                 .comment(planCreateRequest.getComment())
                 .build();
 
+        log.info(plan.toString());
         planService.createPlan(plan, httpServletRequest);
+        return ResponseUtils.success(true);
     }
 
     @GetMapping("/get")
