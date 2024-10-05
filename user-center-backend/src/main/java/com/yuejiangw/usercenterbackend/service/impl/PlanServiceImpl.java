@@ -33,15 +33,12 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
     private PlanMapper planMapper;
 
     @Override
-    public void createPlan(Plan plan, HttpServletRequest request) {
+    public long createPlan(Plan plan, HttpServletRequest request) {
         boolean saveResult = this.save(plan);
         if (!saveResult) {
-            log.info("Plan can not be saved");
+            throw new CustomException(ErrorCode.SYSTEM_ERROR, "Plan can not be created");
         }
-//        int p = planMapper.insert(plan);
-//        if (p <= 0) {
-//            throw new CustomException(ErrorCode.SYSTEM_ERROR, "Plan can not be created");
-//        }
+        return plan.getId();
     }
 
     @Override

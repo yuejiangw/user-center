@@ -13,7 +13,7 @@ import java.util.Map;
 * @createDate 2024-09-15 12:44:36
 */
 public interface PlanService extends IService<Plan> {
-    void createPlan(final Plan plan, HttpServletRequest request);
+    long createPlan(final Plan plan, HttpServletRequest request);
 
     Plan getPlan(final Long planId, HttpServletRequest request);
 

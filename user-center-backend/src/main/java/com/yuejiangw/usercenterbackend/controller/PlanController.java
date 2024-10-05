@@ -28,7 +28,7 @@ public class PlanController {
     private PlanService planService;
 
     @PostMapping("/create")
-    public BaseResponse<Boolean> createPlan(@RequestBody final PlanCreateRequest planCreateRequest, HttpServletRequest httpServletRequest) {
+    public BaseResponse<Long> createPlan(@RequestBody final PlanCreateRequest planCreateRequest, HttpServletRequest httpServletRequest) {
         final User currentUser = UserUtils.getCurrentUser(httpServletRequest);
 
         final Plan plan = Plan.builder()
@@ -41,9 +41,7 @@ public class PlanController {
                 .comment(planCreateRequest.getComment())
                 .build();
 
-        log.info(plan.toString());
-        planService.createPlan(plan, httpServletRequest);
-        return ResponseUtils.success(true);
+        return ResponseUtils.success(planService.createPlan(plan, httpServletRequest));
     }
 
     @GetMapping("/get")
