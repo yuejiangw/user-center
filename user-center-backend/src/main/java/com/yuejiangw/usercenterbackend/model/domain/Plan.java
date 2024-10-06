@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
  * 
  * @TableName plan
  */
-@TableName(value ="plan")
+@TableName(value ="plan", autoResultMap = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -97,6 +99,7 @@ public class Plan implements Serializable {
     @TableField(value = "updateTime")
     private Date updateTime;
 
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
