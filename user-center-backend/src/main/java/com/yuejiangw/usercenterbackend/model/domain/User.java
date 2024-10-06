@@ -2,6 +2,7 @@ package com.yuejiangw.usercenterbackend.model.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -87,6 +88,7 @@ public class User implements Serializable {
      */
     private Integer userRole;
 
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

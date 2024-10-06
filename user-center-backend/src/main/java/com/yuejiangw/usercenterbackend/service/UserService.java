@@ -36,6 +36,8 @@ public interface UserService extends IService<User> {
 
     List<User> userSearch(Map<String, String> queryParams, HttpServletRequest request);
 
+    User getUserById(long id, HttpServletRequest request);
+
     boolean deleteUser(final long id, HttpServletRequest request);
 
     Long createUser(String userAccount, Integer userRole, HttpServletRequest request);

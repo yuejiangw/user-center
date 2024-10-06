@@ -162,6 +162,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    public User getUserById(long id, HttpServletRequest request) {
+        if (!isAdmin(request)) {
+            throw new CustomException(ErrorCode.PARAMS_ERROR, "only admin can search all users");
+        }
+        return this.getById(id);
+    }
+
+    @Override
     public boolean deleteUser(long id, HttpServletRequest request) {
         // TODO unit test
         // 仅管理员可删除

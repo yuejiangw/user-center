@@ -87,6 +87,11 @@ public class UserController {
         return ResponseUtils.success(userService.userSearch(queryParams, request));
     }
 
+    @GetMapping("/")
+    public BaseResponse<User> getUserById(@RequestParam final long id, final HttpServletRequest request) {
+        return ResponseUtils.success(userService.getUserById(id, request));
+    }
+
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteUser(@RequestParam final long id, final HttpServletRequest request) {
         return ResponseUtils.success(userService.deleteUser(id, request));
