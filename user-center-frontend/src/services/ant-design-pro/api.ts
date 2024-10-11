@@ -57,8 +57,20 @@ export async function searchUsers(
   });
 }
 
+/** 根据 id 获取用户 GET /api/user?id=* */
+export async function getUserById(
+  params?: { id: number },
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponse<API.CurrentUser[]>>('/api/user/', {
+    method: 'GET',
+    params: params,
+    ...(options || {}),
+  });
+}
+
 /** 更新用户 POST /api/user/update */
-export async function updateUser(body: API.UpdateParams, options?: { [key: string]: any }) {
+export async function updateUser(body: API.UserUpdateParams, options?: { [key: string]: any }) {
   return request<API.BaseResponse<boolean>>('/api/user/update', {
     method: 'POST',
     headers: {
@@ -103,63 +115,55 @@ export async function deleteUser(
   });
 }
 
-/** 此处后端没有提供注释 GET /api/notices */
-export async function getNotices(options?: { [key: string]: any }) {
-  return request<API.NoticeIconList>('/api/notices', {
+/** 搜索教学计划 GET /api/plan/search */
+export async function searchPlans(
+  params?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponse<API.Plan[]>>('/api/plan/search', {
     method: 'GET',
+    params: params,
     ...(options || {}),
   });
 }
 
-/** 获取规则列表 GET /api/rule */
-export async function rule(
-  params: {
-    // query
-    /** 当前的页码 */
-    current?: number;
-    /** 页面的容量 */
-    pageSize?: number;
-  },
+/** 创建教学计划 POST /api/plan/create* */
+export async function createPlan(body: API.PlanCreateParams, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<boolean>>('/api/plan/create', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 更新教学计划 POST /api/plan/create* */
+export async function updatePlan(body: API.PlanUpdateParams, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<boolean>>('/api/plan/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 删除用户 POST /api/plan/delete?id=* */
+export async function deletePlan(
+  params: { id: number },
   options?: { [key: string]: any },
 ) {
-  return request<API.RuleList>('/api/rule', {
-    method: 'GET',
+  return request<API.BaseResponse<boolean>>('/api/plan/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     params: {
       ...params,
     },
     ...(options || {}),
-  });
-}
-
-/** 更新规则 PUT /api/rule */
-export async function updateRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/api/rule', {
-    method: 'POST',
-    data: {
-      method: 'update',
-      ...(options || {}),
-    },
-  });
-}
-
-/** 新建规则 POST /api/rule */
-export async function addRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/api/rule', {
-    method: 'POST',
-    data: {
-      method: 'post',
-      ...(options || {}),
-    },
-  });
-}
-
-/** 删除规则 DELETE /api/rule */
-export async function removeRule(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/rule', {
-    method: 'POST',
-    data: {
-      method: 'delete',
-      ...(options || {}),
-    },
   });
 }

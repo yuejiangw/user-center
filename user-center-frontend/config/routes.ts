@@ -16,7 +16,7 @@ export default [
     routes: [
       {name: 'Admin Home', path: '/admin/home', component: './Admin/Admin'},
       {name: 'User Management', path: '/admin/user-manage', component: './Admin/UserManage/UserManageForm'},
-      {name: 'Plan Management', path: '/admin/plan-manage', component: './Admin/PlanManage'},
+      {name: 'Plan Management', path: '/admin/plan-manage', component: './Admin/PlanManage/PlanManageForm'},
     ],
   },
   {name: 'Profile', icon: 'profile', path: '/user/profile', component: './User/Profile'},
