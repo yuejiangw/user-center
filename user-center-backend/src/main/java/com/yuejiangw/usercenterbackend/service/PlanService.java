@@ -1,6 +1,6 @@
 package com.yuejiangw.usercenterbackend.service;
 
-import com.yuejiangw.usercenterbackend.model.domain.Plan;
+import com.yuejiangw.usercenterbackend.model.entity.Plan;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
 

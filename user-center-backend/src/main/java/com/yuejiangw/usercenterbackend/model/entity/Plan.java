@@ -1,4 +1,4 @@
-package com.yuejiangw.usercenterbackend.model.domain;
+package com.yuejiangw.usercenterbackend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.yuejiangw.usercenterbackend.model.CourseStage;
+import com.yuejiangw.usercenterbackend.model.dto.CourseStage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

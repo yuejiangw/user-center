@@ -2,7 +2,7 @@ package com.yuejiangw.usercenterbackend.exception;
 
 import com.yuejiangw.usercenterbackend.common.BaseResponse;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
-import com.yuejiangw.usercenterbackend.common.ResponseUtils;
+import com.yuejiangw.usercenterbackend.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
 import com.yuejiangw.usercenterbackend.exception.CustomException;
-import com.yuejiangw.usercenterbackend.model.domain.User;
+import com.yuejiangw.usercenterbackend.model.entity.User;
 import com.yuejiangw.usercenterbackend.service.UserService;
 import com.yuejiangw.usercenterbackend.mapper.UserMapper;
 import jakarta.annotation.Resource;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.yuejiangw.usercenterbackend.common.UserUtils.isAdmin;
+import static com.yuejiangw.usercenterbackend.utils.UserUtils.isAdmin;
 import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.*;
 
 

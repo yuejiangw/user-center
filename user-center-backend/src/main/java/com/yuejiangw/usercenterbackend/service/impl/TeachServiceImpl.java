@@ -1,9 +1,9 @@
 package com.yuejiangw.usercenterbackend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yuejiangw.usercenterbackend.common.UserUtils;
-import com.yuejiangw.usercenterbackend.model.domain.Teach;
-import com.yuejiangw.usercenterbackend.model.domain.User;
+import com.yuejiangw.usercenterbackend.utils.UserUtils;
+import com.yuejiangw.usercenterbackend.model.entity.Teach;
+import com.yuejiangw.usercenterbackend.model.entity.User;
 import com.yuejiangw.usercenterbackend.service.TeachService;
 import com.yuejiangw.usercenterbackend.mapper.TeachMapper;
 import jakarta.annotation.Resource;

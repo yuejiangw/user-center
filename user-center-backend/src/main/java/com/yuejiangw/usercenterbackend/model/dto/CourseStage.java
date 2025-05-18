@@ -1,4 +1,4 @@
-package com.yuejiangw.usercenterbackend.model;
+package com.yuejiangw.usercenterbackend.model.dto;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.yuejiangw.usercenterbackend.mapper;
 
-import com.yuejiangw.usercenterbackend.model.domain.Plan;
+import com.yuejiangw.usercenterbackend.model.entity.Plan;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

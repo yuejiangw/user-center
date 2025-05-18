@@ -1,8 +1,8 @@
-package com.yuejiangw.usercenterbackend.common;
+package com.yuejiangw.usercenterbackend.utils;
 
+import com.yuejiangw.usercenterbackend.common.ErrorCode;
 import com.yuejiangw.usercenterbackend.exception.CustomException;
-import com.yuejiangw.usercenterbackend.model.domain.User;
-import jakarta.annotation.Nullable;
+import com.yuejiangw.usercenterbackend.model.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 
 import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.ADMIN_ROLE;

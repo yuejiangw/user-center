@@ -1,4 +1,4 @@
-package com.yuejiangw.usercenterbackend.model.domain;
+package com.yuejiangw.usercenterbackend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

@@ -1,6 +1,5 @@
-package com.yuejiangw.usercenterbackend.model.request;
+package com.yuejiangw.usercenterbackend.model.dto;
 
-import com.yuejiangw.usercenterbackend.model.CourseStage;
 import lombok.Data;
 
 import java.io.Serial;
@@ -8,10 +7,11 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class PlanCreateRequest implements Serializable {
-
+public class PlanUpdateRequest implements Serializable {
     @Serial
-    private static final long serialVersionUID = 2352527412169150000L;
+    private static final long serialVersionUID = -3567554206991419223L;
+
+    private Long id;
 
     private String name;
 

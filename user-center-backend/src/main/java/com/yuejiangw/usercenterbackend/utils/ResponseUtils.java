@@ -1,4 +1,7 @@
-package com.yuejiangw.usercenterbackend.common;
+package com.yuejiangw.usercenterbackend.utils;
+
+import com.yuejiangw.usercenterbackend.common.BaseResponse;
+import com.yuejiangw.usercenterbackend.common.ErrorCode;
 
 import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.CODE_OK;
 import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.MESSAGE_OK;
