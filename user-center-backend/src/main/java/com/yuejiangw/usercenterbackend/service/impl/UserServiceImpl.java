@@ -7,17 +7,15 @@ import com.yuejiangw.usercenterbackend.exception.CustomException;
 import com.yuejiangw.usercenterbackend.model.entity.User;
 import com.yuejiangw.usercenterbackend.service.UserService;
 import com.yuejiangw.usercenterbackend.mapper.UserMapper;
+import com.yuejiangw.usercenterbackend.utils.UserUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.yuejiangw.usercenterbackend.utils.UserUtils.isAdmin;
 import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.*;
@@ -45,22 +43,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword, Integer userRole) {
         // 1. 校验
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "userAccount, userPassword, checkPassword can not be null");
-        }
-        if (userAccount.length() < 4) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "userAccount's length should >= 4");
-        }
-        if (userPassword.length() < 8 || checkPassword.length() < 8) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "userPassword's length should >= 8");
-        }
-
-        // 账户不能包含特殊字符
-        String validPattern = "^[a-zA-Z0-9]+$";
-        Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
-        if (!matcher.matches()) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "You can only use digits and English letters to create your account");
-        }
+        UserUtils.checkNull(userAccount, userPassword, checkPassword);
+        UserUtils.checkLength(userAccount, userPassword, checkPassword);
+        UserUtils.checkValidCharacter(userAccount);
 
         // 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
@@ -100,22 +85,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
-        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "userAccount, userPassword, checkPassword can not be null");
-        }
-        if (userAccount.length() < 4) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "userAccount's length should >= 4");
-        }
-        if (userPassword.length() < 8) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "userPassword's length should >= 8");
-        }
-
-        // 账户不能包含特殊字符
-        String validPattern = "^[a-zA-Z0-9]+$";
-        Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
-        if (!matcher.matches()) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "You can only use digits and English letters to create your account");
-        }
+        UserUtils.checkNull(userAccount, userPassword);
+        UserUtils.checkLength(userAccount, userPassword);
+        UserUtils.checkValidCharacter(userAccount);
 
         // 2. 加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
