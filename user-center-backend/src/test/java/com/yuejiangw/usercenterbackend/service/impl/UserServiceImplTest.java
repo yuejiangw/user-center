@@ -87,6 +87,109 @@ class UserServiceImplTest {
     }
 
     @Test
+    void userRegister_NullAccount() {
+        // 准备测试数据
+        String userAccount = null;
+        String userPassword = "12345678";
+        String checkPassword = "12345678";
+
+        // 执行测试并验证异常
+        CustomException exception = assertThrows(CustomException.class,
+                () -> userService.userRegister(userAccount, userPassword, checkPassword));
+
+        assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
+    }
+
+    @Test
+    void userRegister_EmptyAccount() {
+        // 准备测试数据
+        String userAccount = "";
+        String userPassword = "12345678";
+        String checkPassword = "12345678";
+
+        // 执行测试并验证异常
+        CustomException exception = assertThrows(CustomException.class,
+                () -> userService.userRegister(userAccount, userPassword, checkPassword));
+
+        assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
+    }
+
+    @Test
+    void userRegister_AccountTooShort() {
+        // 准备测试数据
+        String userAccount = "abc"; // 长度小于4
+        String userPassword = "12345678";
+        String checkPassword = "12345678";
+
+        // 执行测试并验证异常
+        CustomException exception = assertThrows(CustomException.class,
+                () -> userService.userRegister(userAccount, userPassword, checkPassword));
+
+        assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
+    }
+
+    @Test
+    void userRegister_PasswordTooShort() {
+        // 准备测试数据
+        String userAccount = "testuser";
+        String userPassword = "1234567"; // 长度小于8
+        String checkPassword = "1234567";
+
+        // 执行测试并验证异常
+        CustomException exception = assertThrows(CustomException.class,
+                () -> userService.userRegister(userAccount, userPassword, checkPassword));
+
+        assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
+    }
+
+    @Test
+    void userRegister_InvalidAccountCharacters() {
+        // 准备测试数据
+        String userAccount = "test@user"; // 包含特殊字符
+        String userPassword = "12345678";
+        String checkPassword = "12345678";
+
+        // 执行测试并验证异常
+        CustomException exception = assertThrows(CustomException.class,
+                () -> userService.userRegister(userAccount, userPassword, checkPassword));
+
+        assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
+    }
+
+    @Test
+    void userRegister_PasswordMismatch() {
+        // 准备测试数据
+        String userAccount = "testuser";
+        String userPassword = "12345678";
+        String checkPassword = "87654321"; // 与密码不匹配
+
+        // 执行测试并验证异常
+        CustomException exception = assertThrows(CustomException.class,
+                () -> userService.userRegister(userAccount, userPassword, checkPassword));
+
+        assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
+    }
+
+    @Test
+    void userRegister_WithUserRole() {
+        // 准备测试数据
+        String userAccount = "testuser";
+        String userPassword = "12345678";
+        String checkPassword = "12345678";
+        Integer userRole = 1; // 管理员角色
+
+        // 模拟数据库查询结果
+        when(userMapper.selectCount(any(QueryWrapper.class))).thenReturn(0L);
+
+        // 执行测试
+        long userId = userService.userRegister(userAccount, userPassword, checkPassword, userRole);
+
+        // 验证结果
+        assertEquals(1L, userId);
+        verify(userService).save(any(User.class));
+    }
+
+    @Test
     void userLogin_Success() {
         // 准备测试数据
         String userAccount = "testuser";
