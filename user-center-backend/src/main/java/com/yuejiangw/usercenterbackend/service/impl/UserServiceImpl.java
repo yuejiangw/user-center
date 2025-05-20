@@ -20,12 +20,11 @@ import java.util.Map;
 import static com.yuejiangw.usercenterbackend.utils.UserUtils.isAdmin;
 import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.*;
 
-
 /**
-* @author yuejiangwu
-* @description 针对表【user(用户)】的数据库操作Service实现
-* @createDate 2024-05-13 15:31:15
-*/
+ * @author yuejiangwu
+ * @description 针对表【user(用户)】的数据库操作Service实现
+ * @createDate 2024-05-13 15:31:15
+ */
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -35,6 +34,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private static final String SALT = "usercenter";
 
+    /**
+     * 该方法是用户注册的重载方法，不带 userRole 参数。
+     * 当调用此方法时，实际上会调用带有 userRole 参数的 userRegister 方法，并将 userRole 设为 null，
+     * 也就是默认不指定用户角色，通常代表注册普通用户。
+     */
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
         return userRegister(userAccount, userPassword, checkPassword, null);
@@ -49,7 +53,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "Make sure the checkPassword is the same as the password you set");
+            throw new CustomException(ErrorCode.PARAMS_ERROR,
+                    "Make sure the checkPassword is the same as the password you set");
         }
 
         // 账户不能重复
@@ -57,7 +62,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("userAccount", userAccount);
         long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "This account has already been created, please login or use a different account name");
+            throw new CustomException(ErrorCode.PARAMS_ERROR,
+                    "This account has already been created, please login or use a different account name");
         }
 
         // 2. 加密
@@ -65,7 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 3. 插入数据
         final User.UserBuilder userBuilder = User.builder()
-                .username(userAccount)  // By default, the user's init username will be the same as the user account
+                .username(userAccount) // By default, the user's init username will be the same as the user account
                 .userAccount(userAccount)
                 .userPassword(encryptPassword);
 
@@ -100,7 +106,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 用户不存在
         if (user == null) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "Login failed, user doesn't exist or userAccount doesn't match userPassword");
+            throw new CustomException(ErrorCode.PARAMS_ERROR,
+                    "Login failed, user doesn't exist or userAccount doesn't match userPassword");
         }
 
         // 3. 用户脱敏
@@ -157,7 +164,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Long createUser(String userAccount, Integer userRole, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            throw new CustomException(ErrorCode.NO_AUTH, "Only Admin can create a user, normal user please use Register API");
+            throw new CustomException(ErrorCode.NO_AUTH,
+                    "Only Admin can create a user, normal user please use Register API");
         }
 
         return userRegister(userAccount, DEFAULT_PASSWORD, DEFAULT_PASSWORD, userRole);
@@ -168,9 +176,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return userMapper.updateById(user) > 0;
     }
 
-
     /**
      * 用户数据脱敏
+     * 
      * @param user
      * @return
      */
@@ -196,6 +204,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 用户注销
+     * 
      * @param request
      */
     @Override
