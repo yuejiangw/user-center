@@ -3,7 +3,7 @@ package com.yuejiangw.usercenterbackend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
-import com.yuejiangw.usercenterbackend.exception.CustomException;
+import com.yuejiangw.usercenterbackend.exception.BusinessException;
 import com.yuejiangw.usercenterbackend.model.entity.User;
 import com.yuejiangw.usercenterbackend.service.UserService;
 import com.yuejiangw.usercenterbackend.mapper.UserMapper;
@@ -53,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR,
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,
                     "Make sure the checkPassword is the same as the password you set");
         }
 
@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("userAccount", userAccount);
         long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR,
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,
                     "This account has already been created, please login or use a different account name");
         }
 
@@ -83,7 +83,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         boolean saveResult = this.save(user);
         if (!saveResult) {
-            throw new CustomException(ErrorCode.SYSTEM_ERROR, "User can not be created");
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "User can not be created");
         }
         return user.getId();
     }
@@ -106,7 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 用户不存在
         if (user == null) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR,
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,
                     "Login failed, user doesn't exist or userAccount doesn't match userPassword");
         }
 
@@ -121,10 +121,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<User> userSearch(Map<String, String> queryParams, HttpServletRequest request) {
-        // TODO unit test
         // 仅管理员可查询
         if (!isAdmin(request)) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "only admin can search all users");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "only admin can search all users");
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -143,7 +142,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User getUserById(long id, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "only admin can search all users");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "only admin can search all users");
         }
         return this.getById(id);
     }
@@ -153,7 +152,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // TODO unit test
         // 仅管理员可删除
         if (!isAdmin(request)) {
-            throw new CustomException(ErrorCode.NO_AUTH, "Only Admin can delete a user");
+            throw new BusinessException(ErrorCode.NO_AUTH, "Only Admin can delete a user");
         }
 
         final int rows = userMapper.deleteById(id);
@@ -164,7 +163,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Long createUser(String userAccount, Integer userRole, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            throw new CustomException(ErrorCode.NO_AUTH,
+            throw new BusinessException(ErrorCode.NO_AUTH,
                     "Only Admin can create a user, normal user please use Register API");
         }
 

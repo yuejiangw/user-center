@@ -1,8 +1,7 @@
 package com.yuejiangw.usercenterbackend.controller;
 
 import com.yuejiangw.usercenterbackend.common.BaseResponse;
-import com.yuejiangw.usercenterbackend.common.ErrorCode;
-import com.yuejiangw.usercenterbackend.exception.CustomException;
+import com.yuejiangw.usercenterbackend.exception.BusinessException;
 import com.yuejiangw.usercenterbackend.model.dto.UserLoginRequest;
 import com.yuejiangw.usercenterbackend.model.dto.UserRegisterRequest;
 import com.yuejiangw.usercenterbackend.model.dto.UserUpdateRequest;
@@ -17,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +67,7 @@ class UserControllerTest {
     @Test
     void userRegister_NullRequest() {
         // 执行测试并验证异常
-        assertThrows(CustomException.class, () -> userController.userRegister(null));
+        assertThrows(BusinessException.class, () -> userController.userRegister(null));
     }
 
     @Test
@@ -233,6 +231,6 @@ class UserControllerTest {
     @Test
     void updateUser_NullRequest() {
         // 执行测试并验证异常
-        assertThrows(CustomException.class, () -> userController.updateUser(null));
+        assertThrows(BusinessException.class, () -> userController.updateUser(null));
     }
 }

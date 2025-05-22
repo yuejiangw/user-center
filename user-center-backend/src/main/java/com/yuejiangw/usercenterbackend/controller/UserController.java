@@ -4,7 +4,7 @@ import com.yuejiangw.usercenterbackend.common.BaseResponse;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
 import com.yuejiangw.usercenterbackend.utils.ResponseUtils;
 import com.yuejiangw.usercenterbackend.utils.UserUtils;
-import com.yuejiangw.usercenterbackend.exception.CustomException;
+import com.yuejiangw.usercenterbackend.exception.BusinessException;
 import com.yuejiangw.usercenterbackend.model.entity.User;
 import com.yuejiangw.usercenterbackend.model.dto.UserLoginRequest;
 import com.yuejiangw.usercenterbackend.model.dto.UserRegisterRequest;
@@ -32,7 +32,7 @@ public class UserController {
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody final UserRegisterRequest request) {
         if (request == null) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
         final String userAccount = request.getUserAccount();
@@ -105,7 +105,7 @@ public class UserController {
     @PostMapping("/update")
     public BaseResponse<Boolean> updateUser(@RequestBody final UserUpdateRequest request) {
         if (request == null) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
         final User user = User.builder()

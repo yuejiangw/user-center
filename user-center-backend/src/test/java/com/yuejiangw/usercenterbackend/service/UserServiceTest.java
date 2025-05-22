@@ -1,6 +1,6 @@
 package com.yuejiangw.usercenterbackend.service;
 
-import com.yuejiangw.usercenterbackend.exception.CustomException;
+import com.yuejiangw.usercenterbackend.exception.BusinessException;
 import com.yuejiangw.usercenterbackend.model.entity.User;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
@@ -49,27 +49,27 @@ class UserServiceTest {
     @Test
     void testUserRegister_fail() {
         // 校验 userAccount 不为空
-        assertThrows(CustomException.class, () -> {
+        assertThrows(BusinessException.class, () -> {
             userService.userRegister(INVALID_ACCOUNT_EMPTY, VALID_PASSWORD, VALID_CHECK_PASSWORD);
         });
 
         // 校验 userAccount 长度不小于 4
-        assertThrows(CustomException.class, () -> {
+        assertThrows(BusinessException.class, () -> {
             userService.userRegister(INVALID_ACCOUNT_LENGTH, VALID_PASSWORD, VALID_CHECK_PASSWORD);
         });
 
         // 校验 userAccount 不能包含特殊字符
-        assertThrows(CustomException.class, () -> {
+        assertThrows(BusinessException.class, () -> {
             userService.userRegister(INVALID_ACCOUNT_CHAR, VALID_PASSWORD, VALID_CHECK_PASSWORD);
         });
 
         // 校验 userPassword 和 checkPassword 长度不小于 8
-        assertThrows(CustomException.class, () -> {
+        assertThrows(BusinessException.class, () -> {
             userService.userRegister(VALID_ACCOUNT, INVALID_PASSWORD_LENGTH, INVALID_CHECK_PASSWORD_LENGTH);
         });
 
         // 校验 userPassword 和 checkPassword 相等
-        assertThrows(CustomException.class, () -> {
+        assertThrows(BusinessException.class, () -> {
             userService.userRegister(VALID_ACCOUNT, VALID_PASSWORD, INVALID_CHECK_PASSWORD_LENGTH);
         });
     }

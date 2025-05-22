@@ -4,7 +4,7 @@ import com.yuejiangw.usercenterbackend.common.BaseResponse;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
 import com.yuejiangw.usercenterbackend.utils.ResponseUtils;
 import com.yuejiangw.usercenterbackend.utils.UserUtils;
-import com.yuejiangw.usercenterbackend.exception.CustomException;
+import com.yuejiangw.usercenterbackend.exception.BusinessException;
 import com.yuejiangw.usercenterbackend.model.entity.Plan;
 import com.yuejiangw.usercenterbackend.model.entity.User;
 import com.yuejiangw.usercenterbackend.model.dto.PlanCreateRequest;
@@ -62,7 +62,7 @@ public class PlanController {
     @PostMapping("/update")
     public BaseResponse<Boolean> updatePlan(@RequestBody final PlanUpdateRequest planUpdateRequest) {
         if (planUpdateRequest == null) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
         final Plan plan = Plan.builder()

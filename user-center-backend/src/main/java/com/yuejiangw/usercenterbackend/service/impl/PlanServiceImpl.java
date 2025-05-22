@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
 import com.yuejiangw.usercenterbackend.utils.UserUtils;
-import com.yuejiangw.usercenterbackend.exception.CustomException;
+import com.yuejiangw.usercenterbackend.exception.BusinessException;
 import com.yuejiangw.usercenterbackend.model.entity.Plan;
 import com.yuejiangw.usercenterbackend.model.entity.User;
 import com.yuejiangw.usercenterbackend.service.PlanService;
@@ -36,7 +36,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
     public long createPlan(Plan plan, HttpServletRequest request) {
         boolean saveResult = this.save(plan);
         if (!saveResult) {
-            throw new CustomException(ErrorCode.SYSTEM_ERROR, "Plan can not be created");
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "Plan can not be created");
         }
         return plan.getId();
     }
@@ -50,12 +50,12 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
 
         // make sure planId is valid
         if (plan == null) {
-            throw new CustomException(ErrorCode.PARAMS_ERROR, "Get plan failed, plan ID doesn't exist");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Get plan failed, plan ID doesn't exist");
         }
 
         // If you are not admin, you can only view the plans created by yourself
         if (!isAdmin && !Objects.equals(plan.getCreatorId(), user.getId())) {
-            throw new CustomException(ErrorCode.NO_AUTH, "Get plan failed, you don't have permission to view others' plans");
+            throw new BusinessException(ErrorCode.NO_AUTH, "Get plan failed, you don't have permission to view others' plans");
         }
 
         return plan;
@@ -92,7 +92,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
         // 如果不是 admin，则只允许删除自己创建的 plan
         final boolean isAdmin = UserUtils.isAdmin(request);
         if (!isAdmin && !Objects.equals(planToDelete.getCreatorId(), user.getId())) {
-            throw new CustomException(ErrorCode.NO_AUTH, "Get plan failed, you don't have permission to delete others' plans");
+            throw new BusinessException(ErrorCode.NO_AUTH, "Get plan failed, you don't have permission to delete others' plans");
         }
 
         final int rows = planMapper.deleteById(planId);

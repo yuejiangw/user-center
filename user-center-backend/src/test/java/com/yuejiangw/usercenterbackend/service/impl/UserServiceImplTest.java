@@ -2,7 +2,7 @@ package com.yuejiangw.usercenterbackend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
-import com.yuejiangw.usercenterbackend.exception.CustomException;
+import com.yuejiangw.usercenterbackend.exception.BusinessException;
 import com.yuejiangw.usercenterbackend.mapper.UserMapper;
 import com.yuejiangw.usercenterbackend.model.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -80,7 +80,7 @@ class UserServiceImplTest {
         when(userMapper.selectCount(any(QueryWrapper.class))).thenReturn(1L);
 
         // 执行测试并验证异常
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> userService.userRegister(userAccount, userPassword, checkPassword));
 
         assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
@@ -94,7 +94,7 @@ class UserServiceImplTest {
         String checkPassword = "12345678";
 
         // 执行测试并验证异常
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> userService.userRegister(userAccount, userPassword, checkPassword));
 
         assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
@@ -108,7 +108,7 @@ class UserServiceImplTest {
         String checkPassword = "12345678";
 
         // 执行测试并验证异常
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> userService.userRegister(userAccount, userPassword, checkPassword));
 
         assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
@@ -122,7 +122,7 @@ class UserServiceImplTest {
         String checkPassword = "12345678";
 
         // 执行测试并验证异常
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> userService.userRegister(userAccount, userPassword, checkPassword));
 
         assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
@@ -136,7 +136,7 @@ class UserServiceImplTest {
         String checkPassword = "1234567";
 
         // 执行测试并验证异常
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> userService.userRegister(userAccount, userPassword, checkPassword));
 
         assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
@@ -150,7 +150,7 @@ class UserServiceImplTest {
         String checkPassword = "12345678";
 
         // 执行测试并验证异常
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> userService.userRegister(userAccount, userPassword, checkPassword));
 
         assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
@@ -164,7 +164,7 @@ class UserServiceImplTest {
         String checkPassword = "87654321"; // 与密码不匹配
 
         // 执行测试并验证异常
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> userService.userRegister(userAccount, userPassword, checkPassword));
 
         assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());
@@ -222,7 +222,7 @@ class UserServiceImplTest {
         when(userMapper.selectOne(any(QueryWrapper.class))).thenReturn(null);
 
         // 执行测试并验证异常
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> userService.userLogin(userAccount, userPassword, request));
 
         assertEquals(ErrorCode.PARAMS_ERROR.getCode(), exception.getCode());

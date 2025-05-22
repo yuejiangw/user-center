@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(CustomException.class)
-    public BaseResponse customExceptionHandler(CustomException e) {
+    @ExceptionHandler(BusinessException.class)
+    public BaseResponse<?> customExceptionHandler(BusinessException e) {
         log.error("customException: {}. Description: {}", e.getMessage(), e.getDescription());
         return ResponseUtils.error(ErrorCode.SYSTEM_ERROR, e.getMessage(), e.getDescription());
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public BaseResponse customExceptionHandler(RuntimeException e) {
+    public BaseResponse<?> customExceptionHandler(RuntimeException e) {
         log.error("runtimeException: {}", e.getMessage());
         return ResponseUtils.error(ErrorCode.SYSTEM_ERROR, e.getMessage());
     }
