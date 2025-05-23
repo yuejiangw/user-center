@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
@@ -58,7 +57,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public BaseResponse<User> userLogin(@RequestBody final UserLoginRequest request, final HttpServletRequest httpServletRequest) {
+    public BaseResponse<User> userLogin(@RequestBody final UserLoginRequest request,
+            final HttpServletRequest httpServletRequest) {
         if (request == null) {
             return null;
         }
@@ -82,7 +82,8 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public BaseResponse<List<User>> searchUsers(@RequestParam Map<String, String> queryParams, final HttpServletRequest request) {
+    public BaseResponse<List<User>> searchUsers(@RequestParam Map<String, String> queryParams,
+            final HttpServletRequest request) {
         log.info(queryParams.toString());
         return ResponseUtils.success(userService.userSearch(queryParams, request));
     }
@@ -98,7 +99,8 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public BaseResponse<Long> createUser(@RequestParam final String userAccount, @RequestParam final Integer userRole, final HttpServletRequest request) {
+    public BaseResponse<Long> createUser(@RequestParam final String userAccount, @RequestParam final Integer userRole,
+            final HttpServletRequest request) {
         return ResponseUtils.success(userService.createUser(userAccount, userRole, request));
     }
 
