@@ -51,7 +51,6 @@ public class UserController {
 
         // 尽管已经获取了登录信息但还是建议从数据库中取数据，因为用户信息可能会变化但 session 中的信息不一定会变，以数据库为准
         long userId = currentUser.getId();
-        // TODO 校验用户是否合法
         final User user = userService.getById(userId);
         return ResponseUtils.success(userService.desensitize(user));
     }
@@ -105,7 +104,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateUser(@RequestBody final UserUpdateRequest request) {
+    public BaseResponse<Boolean> updateUser(@RequestBody final UserUpdateRequest request, HttpServletRequest httpServletRequest) {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -122,6 +121,6 @@ public class UserController {
                 .updateTime(new Date())
                 .build();
 
-        return ResponseUtils.success(userService.updateUser(user));
+        return ResponseUtils.success(userService.updateUser(user, httpServletRequest));
     }
 }

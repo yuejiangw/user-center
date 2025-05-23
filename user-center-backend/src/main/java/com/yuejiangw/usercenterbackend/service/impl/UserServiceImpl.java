@@ -16,8 +16,10 @@ import org.springframework.util.DigestUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.yuejiangw.usercenterbackend.utils.UserUtils.isAdmin;
+import static com.yuejiangw.usercenterbackend.utils.UserUtils.getCurrentUser;
 import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.*;
 
 /**
@@ -149,7 +151,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean deleteUser(long id, HttpServletRequest request) {
-        // TODO unit test
         // 仅管理员可删除
         if (!isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH, "Only Admin can delete a user");
@@ -171,7 +172,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public boolean updateUser(User user) {
+    public boolean updateUser(User user, HttpServletRequest httpServletRequest) {
+        if (!isAdmin(httpServletRequest) && !Objects.equals(getCurrentUser(httpServletRequest).getId(), user.getId())) {
+            throw new BusinessException(ErrorCode.NO_AUTH, "Only Admin can update other user's information.");
+        }
         return userMapper.updateById(user) > 0;
     }
 

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -217,10 +218,10 @@ class UserControllerTest {
         updateRequest.setPhone("1234567890");
         updateRequest.setEmail("test@example.com");
 
-        when(userService.updateUser(any(User.class))).thenReturn(true);
+        when(userService.updateUser(any(User.class), any(HttpServletRequest.class))).thenReturn(true);
 
         // 执行测试
-        BaseResponse<Boolean> response = userController.updateUser(updateRequest);
+        BaseResponse<Boolean> response = userController.updateUser(updateRequest, request);
 
         // 验证结果
         assertNotNull(response);
@@ -231,6 +232,6 @@ class UserControllerTest {
     @Test
     void updateUser_NullRequest() {
         // 执行测试并验证异常
-        assertThrows(BusinessException.class, () -> userController.updateUser(null));
+        assertThrows(BusinessException.class, () -> userController.updateUser(null, null));
     }
 }

@@ -42,7 +42,7 @@ public interface UserService extends IService<User> {
 
     Long createUser(String userAccount, Integer userRole, HttpServletRequest request);
 
-    boolean updateUser(User user);
+    boolean updateUser(User user, HttpServletRequest httpServletRequest);
 
     User desensitize(User user);
 
