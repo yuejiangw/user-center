@@ -1,7 +1,10 @@
 package com.yuejiangw.usercenterbackend.common;
 
+import lombok.Getter;
+
+@Getter
 public enum ErrorCode {
-    SUCCESS(0, "ok", ""),
+    SUCCESS(20000, "ok", ""),
     PARAMS_ERROR(40000, "request params error", ""),
     NULL_ERROR(40001, "request data is null", ""),
     NOT_LOGIN(40100, "not login", ""),
@@ -18,17 +21,5 @@ public enum ErrorCode {
         this.code = code;
         this.message = message;
         this.description = description;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }
