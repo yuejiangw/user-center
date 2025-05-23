@@ -1,7 +1,9 @@
 package com.yuejiangw.usercenterbackend.exception;
 
 import com.yuejiangw.usercenterbackend.common.ErrorCode;
+import lombok.Getter;
 
+@Getter
 public class BusinessException extends RuntimeException {
     private final int code;
 
@@ -25,11 +27,4 @@ public class BusinessException extends RuntimeException {
         this.description = description;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }

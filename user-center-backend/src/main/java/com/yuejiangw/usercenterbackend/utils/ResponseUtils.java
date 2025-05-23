@@ -12,15 +12,11 @@ public class ResponseUtils {
         return new BaseResponse<>(CODE_OK, data, MESSAGE_OK);
     }
 
-    public static BaseResponse error(ErrorCode errorCode) {
-        return new BaseResponse<>(errorCode);
+    public static BaseResponse<?> error(ErrorCode errorCode, String message) {
+        return new BaseResponse<>(errorCode, message);
     }
 
-    public static BaseResponse error(ErrorCode errorCode, String message) {
-        return new BaseResponse(errorCode, message);
-    }
-
-    public static BaseResponse error(ErrorCode errorCode, String message, String description) {
-        return new BaseResponse(errorCode, message, description);
+    public static BaseResponse<?> error(ErrorCode errorCode, String message, String description) {
+        return new BaseResponse<>(errorCode, message, description);
     }
 }
