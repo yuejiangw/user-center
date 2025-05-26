@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -61,7 +60,7 @@ class UserControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(0, response.getCode());
+        assertEquals(0, response.getErrorCode());
         assertEquals(1L, response.getData());
     }
 
@@ -91,7 +90,7 @@ class UserControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(0, response.getCode());
+        assertEquals(0, response.getErrorCode());
         assertEquals("testuser", response.getData().getUserAccount());
     }
 
@@ -121,7 +120,7 @@ class UserControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(0, response.getCode());
+        assertEquals(0, response.getErrorCode());
         assertEquals("testuser", response.getData().getUserAccount());
     }
 
@@ -135,7 +134,7 @@ class UserControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(0, response.getCode());
+        assertEquals(0, response.getErrorCode());
         assertEquals(1, response.getData());
     }
 
@@ -156,7 +155,7 @@ class UserControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(0, response.getCode());
+        assertEquals(0, response.getErrorCode());
         assertEquals(1, response.getData().size());
         assertEquals("testuser", response.getData().get(0).getUsername());
     }
@@ -177,7 +176,7 @@ class UserControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(0, response.getCode());
+        assertEquals(0, response.getErrorCode());
         assertEquals("testuser", response.getData().getUserAccount());
     }
 
@@ -191,7 +190,7 @@ class UserControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(0, response.getCode());
+        assertEquals(0, response.getErrorCode());
         assertTrue(response.getData());
     }
 
@@ -202,7 +201,7 @@ class UserControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(0, response.getCode());
+        assertEquals(0, response.getErrorCode());
         assertNotNull(response.getData());
     }
 
@@ -225,7 +224,7 @@ class UserControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertEquals(0, response.getCode());
+        assertEquals(0, response.getErrorCode());
         assertTrue(response.getData());
     }
 

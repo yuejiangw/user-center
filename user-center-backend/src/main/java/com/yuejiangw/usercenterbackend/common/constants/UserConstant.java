@@ -23,10 +23,6 @@ public interface UserConstant {
      */
     String DEFAULT_PASSWORD = "password";
 
-    String MESSAGE_OK = "ok";
-
-    int CODE_OK = 0;
-
     String ID = "id";
 
     String USERNAME = "username";
