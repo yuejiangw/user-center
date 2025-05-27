@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public BaseResponse<?> customExceptionHandler(BusinessException e) {
-        log.error("customException: {}. Description: {}", e.getMessage(), e.getMessage());
+        log.error("Business Exception: {}. Description: {}", e.getMessage(), e.getMessage());
         return ResponseUtils.error(ErrorCode.SYSTEM_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
     public BaseResponse<?> customExceptionHandler(RuntimeException e) {
-        log.error("runtimeException: {}", e.getMessage());
+        log.error("Runtime Exception: {}", e.getMessage());
         return ResponseUtils.error(ErrorCode.SYSTEM_ERROR, e.getMessage());
     }
 }
