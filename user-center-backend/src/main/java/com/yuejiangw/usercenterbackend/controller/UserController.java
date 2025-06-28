@@ -47,7 +47,11 @@ public class UserController {
 
     @GetMapping("/current")
     public BaseResponse<User> currentUser(final HttpServletRequest request) {
-        User currentUser = UserUtils.getCurrentUser(request);
+        // 从 request 属性中获取当前用户（由拦截器设置）
+        User currentUser = (User) request.getAttribute("currentUser");
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN, "User not logged in");
+        }
 
         // 尽管已经获取了登录信息但还是建议从数据库中取数据，因为用户信息可能会变化但 session 中的信息不一定会变，以数据库为准
         long userId = currentUser.getId();
@@ -56,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public BaseResponse<User> userLogin(@RequestBody final UserLoginRequest request,
+    public BaseResponse<Map<String, Object>> userLogin(@RequestBody final UserLoginRequest request,
             final HttpServletRequest httpServletRequest) {
         if (request == null) {
             return null;
@@ -69,7 +73,17 @@ public class UserController {
             return null;
         }
 
-        return ResponseUtils.success(userService.userLogin(userAccount, userPassword, httpServletRequest));
+        User user = userService.userLogin(userAccount, userPassword, httpServletRequest);
+
+        // 获取生成的 token
+        String token = (String) httpServletRequest.getAttribute("token");
+
+        // 返回用户信息和 token
+        Map<String, Object> result = Map.of(
+                "user", user,
+                "token", token);
+
+        return ResponseUtils.success(result);
     }
 
     @PostMapping("/logout")

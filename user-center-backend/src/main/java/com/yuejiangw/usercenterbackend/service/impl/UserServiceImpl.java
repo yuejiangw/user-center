@@ -7,6 +7,8 @@ import com.yuejiangw.usercenterbackend.exception.BusinessException;
 import com.yuejiangw.usercenterbackend.model.entity.User;
 import com.yuejiangw.usercenterbackend.service.UserService;
 import com.yuejiangw.usercenterbackend.mapper.UserMapper;
+import com.yuejiangw.usercenterbackend.service.RedisSessionService;
+import com.yuejiangw.usercenterbackend.utils.JwtUtils;
 import com.yuejiangw.usercenterbackend.utils.UserUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +35,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private JwtUtils jwtUtils;
+
+    @Resource
+    private RedisSessionService redisSessionService;
 
     private static final String SALT = "usercenter";
 
@@ -115,8 +123,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 3. 用户脱敏
         User safetyUser = desensitize(user);
 
-        // 4. 记录用户的登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE, safetyUser);
+        // 4. 生成 JWT token
+        String token = jwtUtils.generateToken(safetyUser);
+
+        // 5. 将用户信息存储到 Redis
+        redisSessionService.storeUserSession(token, safetyUser);
+
+        // 6. 将 token 存储到 request 属性中，供 Controller 返回
+        request.setAttribute("token", token);
 
         return safetyUser;
     }
@@ -173,9 +187,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean updateUser(User user, HttpServletRequest httpServletRequest) {
-        if (!isAdmin(httpServletRequest) && !Objects.equals(getCurrentUser(httpServletRequest).getId(), user.getId())) {
+        // 从 request 属性中获取当前用户
+        User currentUser = (User) httpServletRequest.getAttribute("currentUser");
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN, "User not logged in");
+        }
+
+        // 只有管理员或用户本人可以更新用户信息
+        if (!isAdmin(httpServletRequest) && !currentUser.getId().equals(user.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH, "Only Admin can update other user's information.");
         }
+
         return userMapper.updateById(user) > 0;
     }
 
@@ -212,12 +234,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public Integer userLogout(HttpServletRequest request) {
-        // 移除登录态
-        try {
-            request.getSession().removeAttribute(USER_LOGIN_STATE);
+        // 从请求头获取 token
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            // 从 Redis 中移除用户会话
+            redisSessionService.removeUserSession(token);
             return 1;
-        } catch (Exception e) {
-            return 0;
         }
+        return 0;
     }
 }

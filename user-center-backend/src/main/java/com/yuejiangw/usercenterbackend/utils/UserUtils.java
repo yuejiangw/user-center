@@ -45,14 +45,28 @@ public class UserUtils {
     }
 
     public static boolean isAdmin(HttpServletRequest request) {
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        User user = (User) userObj;
+        // 优先从 request 属性中获取用户信息（JWT 方式）
+        User user = (User) request.getAttribute("currentUser");
+
+        // 如果 request 属性中没有，则尝试从 session 中获取（兼容旧方式）
+        if (user == null) {
+            Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+            user = (User) userObj;
+        }
+
         return user != null && user.getUserRole() == ADMIN_ROLE;
     }
 
     public static User getCurrentUser(HttpServletRequest request) {
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        final User user = (User) userObj;
+        // 优先从 request 属性中获取用户信息（JWT 方式）
+        User user = (User) request.getAttribute("currentUser");
+
+        // 如果 request 属性中没有，则尝试从 session 中获取（兼容旧方式）
+        if (user == null) {
+            Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+            user = (User) userObj;
+        }
+
         if (user == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN, "You need to login first");
         }
