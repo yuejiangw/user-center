@@ -104,7 +104,8 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateUser(@RequestBody final UserUpdateRequest request, HttpServletRequest httpServletRequest) {
+    public BaseResponse<Boolean> updateUser(@RequestBody final UserUpdateRequest request,
+            HttpServletRequest httpServletRequest) {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

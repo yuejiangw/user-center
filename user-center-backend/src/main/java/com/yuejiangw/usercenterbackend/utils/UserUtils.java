@@ -14,7 +14,8 @@ import static com.yuejiangw.usercenterbackend.common.constants.UserConstant.USER
 
 public class UserUtils {
 
-    private UserUtils() {}
+    private UserUtils() {
+    }
 
     public static void checkNull(String... args) throws BusinessException {
         if (StringUtils.isAnyBlank(args)) {
@@ -38,7 +39,8 @@ public class UserUtils {
         String validPattern = "^[a-zA-Z0-9]+$";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
         if (!matcher.matches()) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "You can only use digits and English letters to create your account");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,
+                    "You can only use digits and English letters to create your account");
         }
     }
 

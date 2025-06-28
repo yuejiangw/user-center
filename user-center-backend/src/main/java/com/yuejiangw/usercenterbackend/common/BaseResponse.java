@@ -1,13 +1,13 @@
 package com.yuejiangw.usercenterbackend.common;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 import java.io.Serializable;
 
 /**
  * 通用返回类
+ * 
  * @param <T>
  */
 @Getter
