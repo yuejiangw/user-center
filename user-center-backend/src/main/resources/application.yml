@@ -6,6 +6,9 @@ spring:
     url: jdbc:mysql://localhost:3306/usercenter_db?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456  # update it to your own password
+  data:
+    mongodb:
+      uri: mongodb+srv://wuyuejiang123:9zpcZKD23yCx2sZt@plan.4x8hnxm.mongodb.net/plan?retryWrites=true&w=majority
   session:
     timeout: 3600  # session 失效时间，为 1h
 server:

@@ -16,7 +16,7 @@ public class PlanCreateRequest implements Serializable {
 
     private String courseDirection;
 
-    private String subDirection;
+    private List<String> subDirection;
 
     private String courseTarget;
 
