@@ -11,7 +11,7 @@ public class PlanUpdateRequest implements Serializable {
     @Serial
     private static final long serialVersionUID = -3567554206991419223L;
 
-    private Long id;
+    private String id;
 
     private String name;
 

@@ -74,6 +74,7 @@ public class PlanMongoController {
         }
 
         final PlanDocument planDocument = PlanDocument.builder()
+                .id(planUpdateRequest.getId())
                 .name(planUpdateRequest.getName())
                 .courseDirection(planUpdateRequest.getCourseDirection())
                 .subDirection(planUpdateRequest.getSubDirection())
